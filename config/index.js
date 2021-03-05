@@ -8,7 +8,7 @@ module.exports = {
       useEslint: true,
       showEslintErrorsInOverlay: false,
       assetsSubDirectory: 'static',
-      host: '0.0.0.0',
+      host: 'localhost',
       port: 8088,
       assetsPublicPath: '/',
       errorOverlay: true,

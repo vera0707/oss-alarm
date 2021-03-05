@@ -37,7 +37,12 @@ module.exports = {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-        include: [resolve('src'), resolve('test')]
+        include: [resolve('src')],
+        options: {
+          presets: [
+            ['@babel/preset-env', { targets: "defaults" }]
+          ]
+        }
       },
       {
         test: /\.svg(\?\S*)?$/,
