@@ -16,4 +16,5 @@ requireRouter.keys().forEach(fileName => {
   routes.push(route)
 })
 
+
 export default new Router({ routes })

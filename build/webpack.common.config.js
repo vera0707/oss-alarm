@@ -31,6 +31,7 @@ module.exports = {
       {
         test: /\.vue$/,
         loader: 'vue-loader',
+        exclude: /node_modules/,
         options: vueLoaderConfig
       },
       {
@@ -38,11 +39,6 @@ module.exports = {
         loader: 'babel-loader',
         exclude: /node_modules/,
         include: [resolve('src')],
-        options: {
-          presets: [
-            ['@babel/preset-env', { targets: "defaults" }]
-          ]
-        }
       },
       {
         test: /\.svg(\?\S*)?$/,

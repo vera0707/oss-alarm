@@ -10,6 +10,7 @@ module.exports = {
       assetsSubDirectory: 'static',
       host: 'localhost',
       port: 8088,
+      hot: true,
       assetsPublicPath: '/',
       errorOverlay: true,
       poll: false

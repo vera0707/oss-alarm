@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <oss-alarm/>
+    <oss-view />
   </div>
 </template>
 
