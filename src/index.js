@@ -14,6 +14,7 @@ const install = function (Vue, opts = {}) {
   Object.keys(components).forEach(key => {
     const component = components[key]
     Vue.component(component.name, component)
+    console.log('========',component.name);
   })
 }
 
