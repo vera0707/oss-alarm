@@ -1,6 +1,10 @@
 <template>
   <transition name="page-move">
-    <router-view/>
+    <div>
+       <div>Welcome to OSS-ALARM components</div>
+      <OssAlarmWindow />
+      <router-view />
+    </div>
   </transition>
 </template>
 <style lang="scss" scoped>
