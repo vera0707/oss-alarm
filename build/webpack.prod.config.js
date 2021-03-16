@@ -31,12 +31,12 @@ const configuration = merge(commonConfig, {
     minimizer: [
       new UglifyJsPlugin({
         cache: true,
-        chunkFilter: (chunk) => {
-          if (chunk.name === 'vendor') {
-            return false;
-          }
-          return true;
-        },
+        // chunkFilter: (chunk) => {
+        //   if (chunk.name === 'vendor') {
+        //     return false;
+        //   }
+        //   return true;
+        // },
       }),
     ],
   },

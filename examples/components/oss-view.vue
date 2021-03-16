@@ -2,7 +2,6 @@
   <transition name="page-move">
     <div>
        <div>Welcome to OSS-ALARM components</div>
-      <OssAlarmWindow />
       <router-view />
     </div>
   </transition>

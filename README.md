@@ -53,19 +53,12 @@ npm run prod            #组件构建
 
 npm run build           #整体构建
 
-npm run build:style     #样式构建
-
-npm run build:icon      #svg转化为iconfont
-
-npm run build:docs      #文档构建
-
-npm run build:example   #示例构建
-
 npm run build:component #按需组件构建
 
-npm run lint            #eslint测试
+npm run eslint            #eslint测试
 ```
 
 <!-- 问题记录 -->
 
 1.dev环境的热更新配置了没有起来  - 目测是只监听了src文件
+2.build打包后的文件不能为正确引用 - 严重 - 考虑依赖文件没有打包全
