@@ -4,6 +4,7 @@
     "plugin:vue/recommended",
     "airbnb-base"
   ],
+  // 自定义 parser，详见 https://eslint.vuejs.org/user-guide/#how-to-use-custom-parser
   "parserOptions": {
     "parser": "babel-eslint"
   },

@@ -4,7 +4,6 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const requireRouter = require.context('../views', true, /\index.vue/)
-
 let routes = []
 
 requireRouter.keys().forEach(fileName => {
