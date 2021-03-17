@@ -13,6 +13,7 @@ module.exports = {
     filename: 'oss-alarm.common.js'
   },
   resolve: {
+    fallback: { "net": false },
     extensions: ['.js', '.vue', '.json'],
     alias: {
       'vue$': 'vue/dist/vue.esm.js',
@@ -41,19 +42,23 @@ module.exports = {
         include: [resolve('src')],
       },
       {
+        test: /.(ttf|eot|woff|woff2)$/,
+        loader: 'file-loader',
+      },
+      {
         test: /\.svg(\?\S*)?$/,
         loader: 'url-loader',
         options: {
           limit: 10000,
-        //   name: path.posix.join('static', '[name].[hash:7].[ext]')
+          name: path.posix.join('static', '[name].[hash:7].[ext]')
         }
       },
       {
         test: /\.(gif|png|jpe?g)(\?\S*)?$/,
         loader: 'url-loader',
         options: {
-          // limit: 10000,
-        //   name: path.posix.join('static', '[name].[hash:7].[ext]')
+          limit: 10000,
+          name: path.posix.join('static', '[name].[hash:7].[ext]')
         }
       },
     ]

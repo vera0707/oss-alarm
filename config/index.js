@@ -13,7 +13,7 @@ module.exports = {
       hot: true,
       assetsPublicPath: '/',
       errorOverlay: true,
-      poll: false
+      poll: true
     },
     build: {
       env: require('./prod.env'),

@@ -35,6 +35,8 @@
   ],
   "homepage": "https://github.com/vera0707/oss-alarm-window#readme",
   "dependencies": {
+    "ag-grid-community": "^23.0.2",
+    "ag-grid-vue": "^23.0.2",
     "babel-eslint": "^10.1.0",
     "clean-webpack-plugin": "^3.0.0",
     "element-ui": "^2.15.1",
@@ -42,6 +44,8 @@
     "eslint-plugin-vue": "^7.7.0",
     "lodash": "^4.17.21",
     "node-notifier": "^9.0.0",
+    "sockjs-client": "^1.5.0",
+    "stompjs": "^2.3.3",
     "vue": "^2.6.12"
   },
   "devDependencies": {
@@ -63,7 +67,10 @@
     "sass": "^1.32.8",
     "sass-loader": "^11.0.1",
     "uglifyjs-webpack-plugin": "^2.2.0",
+    "url-loader": "^4.1.1",
+    "vue-class-component": "^7.2.6",
     "vue-loader": "^15.9.6",
+    "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.5.1",
     "vue-template-compiler": "^2.6.12",
     "vuex": "^3.6.2",

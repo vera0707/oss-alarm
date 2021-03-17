@@ -21,6 +21,7 @@ const configuration = merge(commonConfig, {
     filename: '[name].js',
     chunkFilename: '[name].chunk.js'
   },
+  target: 'web',
   devServer: {
     host: config.dev.host,
     port: config.dev.port,
@@ -31,6 +32,10 @@ const configuration = merge(commonConfig, {
     overlay: config.dev.errorOverlay
       ? { warnings: false, errors: true }
       : false,
+    contentBase: [
+      path.join(__dirname, '/packages'),
+      path.join(__dirname, '/examples')
+    ],
     publicPath: '/',
     quiet: true,
     progress: true,

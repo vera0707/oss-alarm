@@ -5,6 +5,10 @@ import upperFirst from 'lodash/upperFirst'
 import camelCase from 'lodash/camelCase'
 import router from './router'
 import OssAlarm from '../src/index.js'
+import 'element-ui/lib/theme-chalk/index.css';
+import '../node_modules/ag-grid-community/dist/styles/ag-grid.css';
+import '../node_modules/ag-grid-community/dist/styles/ag-theme-balham.css';
+
 
 Vue.use(OssAlarm);
 Vue.use(ElementUi,{ size: 'small' });

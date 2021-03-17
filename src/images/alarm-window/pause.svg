@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 55.2 (78181) - https://sketchapp.com -->
+    <title>暂停</title>
+    <desc>Created with Sketch.</desc>
+    <g id="OSS故障@20200214" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="OSS故障_告警流水监控窗_全屏" transform="translate(-1123.000000, -270.000000)">
+            <g id="编组-2" transform="translate(43.000000, 106.000000)">
+                <g id="编组-11备份" transform="translate(16.000000, 52.000000)">
+                    <g id="编组-26" transform="translate(16.000000, 112.000000)">
+                        <g id="编组-4" transform="translate(1048.000000, 0.000000)">
+                            <g id="Icon/interface/20.lock/outline备份">
+                                <rect id="矩形" x="0" y="0" width="24" height="24"></rect>
+                                <path d="M7.125,3 C7.74632034,3 8.25,3.50367966 8.25,4.125 L8.25,19.875 C8.25,20.4963203 7.74632034,21 7.125,21 C6.50367966,21 6,20.4963203 6,19.875 L6,4.125 C6,3.50367966 6.50367966,3 7.125,3 Z M17.625,3 C18.2463203,3 18.75,3.50367966 18.75,4.125 L18.75,19.875 C18.75,20.4963203 18.2463203,21 17.625,21 C17.0036797,21 16.5,20.4963203 16.5,19.875 L16.5,4.125 C16.5,3.50367966 17.0036797,3 17.625,3 Z" id="形状结合" fill="#2C9CFA"></path>
+                            </g>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
