@@ -9,12 +9,14 @@
       @onChangeAlarmTab="changeAlarmTab"
     />
     <Features
-      :alarmCount="features.alarmCount"
-      :updateStatus="updateStatus"
+      :alarmCountConfig="features.alarmHeader"
+      :alarmCountData="alarmTableCount"
+      :isStopUpdate="userStopUpdata || systemStopUpdate"
+      @onUserOperation="userOperation"
     />
     <Window
       :socketId="socketId"
-      :activeTab="String(activeTab)"
+      :windowConfig="(this.alarmConfig || {}).window || {}"
       :alarmListData="alarmUpdataList"
     />
   </div>
@@ -38,40 +40,22 @@ export default {
       type: Object,
       default: () => {},
     },
-    // alarmRequest: {
-    //   type: Object,
-    //   default: () => {},
-    // },
-    // socketId: {
-    //   type: Object,
-    // },
+    socketId: {
+      type: String,
+    },
   },
   watch: {
     socketId(newV, oldV) {
       if (newV && !oldV) {
-        new Promise((resolve) => {
-          this.initWebSocket(resolve);
-        }).then(() => {
-          this.quertViewData();
-        });
+        this.startWebsocket();
       }
     },
   },
   computed: {
-    socketId() {
-      return (this.alarmConfig || {}).socketId || "";
-    },
     alarmRequest() {
       return (this.alarmConfig || {}).alarmRequest || {};
     },
     title() {
-      /* 告警标题 { 
-          enable: Boolean, 
-          name: String, 
-          class: String ,
-          Style: Object | String 
-        }
-      */
       let title = (this.alarmConfig || {}).title;
       if (!title) return { enable: false };
       if (typeof title === "string") return { enable: true, name: title };
@@ -79,17 +63,6 @@ export default {
       return { enable: false };
     },
     tabs() {
-      /* 标签切换
-        value: Object,
-        props: {
-          key: key
-          value: value
-        },
-        tabsClass: String,
-        tabsStyle: Object | String
-        tabItemClass: String,
-        tabItemStyle: Object | String
-      */
       const tabs = (this.alarmConfig || {}).tabs || {};
       if (tabs.data && tabs.data.length) {
         const resTabs = {
@@ -104,7 +77,7 @@ export default {
     },
     features() {
       return {
-        alarmCount: {
+        alarmHeader: {
           enable: true,
           alarmClass: null,
           alarmStyle: null,
@@ -131,7 +104,8 @@ export default {
   data() {
     return {
       activeTab: null,
-      updateStatus: true, // 启停状态
+      userStopUpdata: false, // 用户手动关闭刷新功能
+      systemStopUpdate: false, // 系统关闭刷新功能
       alarmUpdataList: {},
       alarmTableCount: {},
       socket: null,
@@ -139,8 +113,20 @@ export default {
       connectStatus: false,
     };
   },
+  created() {
+    if(this.socketId) {
+      this.startWebsocket();
+    }
+  },
   methods: {
-    initWebSocket() {
+    startWebsocket() {
+      new Promise((resolve) => {
+        this.initWebSocket(resolve);
+      }).then(() => {
+        this.quertViewData();
+      });
+    },
+    initWebSocket(resolve) {
       this.socket = new SockJS(`${this.alarmRequest.webSocketUrl}`);
       this.stompClient = Stomp.over(this.socket);
       this.stompClient.connect({}, () => {
@@ -150,21 +136,31 @@ export default {
     },
     quertViewData() {
       this.stompClient.send(this.alarmRequest.getViewUrl, {}, this.socketId);
-      this.stompClient.subscribe(`/topic/${this.alarmId}`, (response) => {
-        const { data, dataType = "", dataCount = {} } = JSON.parse(
-          response.body
-        );
-        if (dataType === "listInfo" || dataType === "kafkaAlarm") {
-          if (data.length > 100) data.length = 100;
-          const tempData = data instanceof Array ? data : [data];
-          this.alarmUpdataList = { dataType, data: tempData };
-          this.alarmTableCount = dataCount;
+      this.stompClient.subscribe(
+        this.alarmRequest.subscribeViewUrl,
+        (response) => {
+          const { data, dataType = "", dataCount = {} } = JSON.parse(
+            response.body
+          );
+          if (dataType === "listInfo" || dataType === "kafkaAlarm") {
+            if (data.length > 100) data.length = 100;
+            const tempData = data instanceof Array ? data : [data];
+            this.alarmUpdataList = { dataType, data: tempData };
+            this.alarmTableCount = dataCount;
+          }
         }
-      });
+      );
     },
     changeAlarmTab(key) {
       this.activeTab = key;
     },
+    userOperation({ type, status = true }) {
+      this[`userOperation${type}`](status)
+    },
+    // 用户暂停/启动流水窗
+    userOperationUserUpdate(isStopUpdate) {
+      this.userStopUpdata = isStopUpdate;
+    }
   },
 };
 </script>
@@ -172,7 +168,9 @@ export default {
 .alarm-window {
   width: 100%;
   height: 100%;
+  border: 1px solid #e4e6ea;
+  background: #fff;
   border-radius: 4px;
-  box-sizing: border-box;
+  overflow: hidden;
 }
 </style>

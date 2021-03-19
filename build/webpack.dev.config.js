@@ -23,7 +23,10 @@ const configuration = merge(commonConfig, {
   },
   target: 'web',
   devServer: {
-    host: config.dev.host,
+    allowedHosts: [
+      '.10.1.193.28:10002'
+    ],
+    // host: config.dev.host,
     port: config.dev.port,
     compress: true,
     open: true,
@@ -41,6 +44,13 @@ const configuration = merge(commonConfig, {
     progress: true,
     watchOptions: {
       poll: config.dev.poll,
+    },
+    proxy:{
+      '/rca-sla/nsi/topo':{
+        target: 'http://10.1.193.28:10002/',
+        secure: false,
+        changeOrigin: true
+      }
     }
   },
   module: {

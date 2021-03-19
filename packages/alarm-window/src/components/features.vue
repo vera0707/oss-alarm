@@ -1,32 +1,41 @@
 <template>
   <div class="alarm-window-features">
     <div
-      v-if="alarmCount.enable"
+      v-if="alarmCountConfig.enable"
       class="window-features-alarm"
-      :class="alarmCount.alarmClass"
-      :style="alarmCount.alarmStyle"
+      :class="alarmCountConfig.alarmClass"
+      :style="alarmCountConfig.alarmStyle"
     >
       <el-tooltip
-        v-for="item in alarmCount.data"
+        v-for="item in alarmCountConfig.data"
         :key="item.name"
         :content="item.name"
         placement="bottom"
       >
         <div class="features-alarm-grid">
           <i class="features-alarm-icon" :class="item.class"></i>
-          <span>20</span>
+          <span>{{ alarmCountData[item.field] }}</span>
         </div>
       </el-tooltip>
     </div>
     <div class="features-control">
-      <el-tooltip content="启动" placement="bottom">
-        <div class="features-control-icon features-play-icon"></div>
+      <el-tooltip v-show="isStopUpdate" content="启动" placement="bottom">
+        <div
+          class="features-control-icon features-play-icon"
+          @click="userOperation('UserUpdate', false)"
+        ></div>
       </el-tooltip>
-      <el-tooltip content="暂停" placement="bottom">
-        <div class="features-control-icon features-pause-icon"></div>
+      <el-tooltip v-show="!isStopUpdate" content="暂停" placement="bottom">
+        <div
+          class="features-control-icon features-pause-icon"
+          @click="userOperation('UserUpdate', true)"
+        ></div>
       </el-tooltip>
       <el-tooltip content="锁定置顶" placement="bottom">
-        <div class="features-control-icon features-lock-icon"></div>
+        <div
+          class="features-control-icon features-lock-icon"
+          @click="userOperation('LockMultipleData')"
+        ></div>
       </el-tooltip>
     </div>
   </div>
@@ -34,9 +43,15 @@
 <script>
 export default {
   props: {
-    alarmCount: Object,
-    updateStatus: Boolean
+    alarmCountConfig: Object,
+    alarmCountData: Object,
+    isStopUpdate: Boolean,
   },
+  methods: {
+    userOperation(type, status){
+      this.$emit('onUserOperation', { type, status })
+    }
+  }
 };
 </script>
 <style lang="scss" scoped>
@@ -51,7 +66,7 @@ export default {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
-    .features-alarm-grid{
+    .features-alarm-grid {
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
@@ -113,7 +128,7 @@ export default {
       }
     }
   }
-  .features-control{
+  .features-control {
     display: flex;
     justify-content: space-around;
     cursor: pointer;

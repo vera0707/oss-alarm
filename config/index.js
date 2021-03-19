@@ -9,7 +9,7 @@ module.exports = {
       showEslintErrorsInOverlay: false,
       assetsSubDirectory: 'static',
       host: 'localhost',
-      port: 8088,
+      port: 8090,
       hot: true,
       assetsPublicPath: '/',
       errorOverlay: true,

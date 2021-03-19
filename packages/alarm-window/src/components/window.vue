@@ -1,8 +1,9 @@
 <template>
   <ag-grid-vue
     :ref="`ossWindow_${socketId}`"
-    class="alarm-window-balham"
-    :rowData="alarmTableList"
+    class="ag-theme-balham oss"
+    :columnDefs="windowConfig.headerData"
+    :rowData="filterTableList(alarmTableList)"
     :defaultColDef="{resizable: true, sortable: true, filter: true,}"
     :localeText="localeText"
   ></ag-grid-vue>
@@ -28,6 +29,7 @@ const localeText = {
 export default {
   props: {
     socketId: String,
+    windowConfig: Object,
     alarmListData: Object,
   },
   components: {
@@ -44,7 +46,7 @@ export default {
           else if (dataType === 'kafkaAlarm' && data.length) {
             const { alarmTableList } = this;
             alarmTableList.unshift(...data);
-            if (alarmTableList.length > 10000) alarmTableList.length = 10000;
+            if (alarmTableList.length > 1000) alarmTableList.length = 1000;
             this.alarmTableList = alarmTableList;
           }
           if (clearData) {
@@ -64,13 +66,17 @@ export default {
       localeText
     }
   },
+  methods:{
+    filterTableList(tableList) {
+      return tableList.filter((v) => !this.alarmClearData.includes(v.rowkey))
+    }
+  }
 };
 </script>
-<style lang="scss" scoped>
-.alarm-window-balham {
+<style lang="scss">
+.ag-theme-balham.oss {
   min-width: 100%;
-  height: calc(100% - 120px);
-  border: 1px solid red;
+  height: calc(100% - 80px);
   .ag-cell-focus:not(.ag-cell-range-selected) {
     border: none !important;
   }

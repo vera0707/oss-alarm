@@ -90,7 +90,7 @@ export default {
         content: "";
         border-top: 0px solid #2c9cfa;
         position: absolute;
-        bottom: -8px;
+        bottom: -6px;
         left: 0px;
       }
     }

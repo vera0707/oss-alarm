@@ -2,11 +2,16 @@
   <div>
     <div>告警流水窗：地址/alarm-window 组件名：OssAlarmWindow</div>
     <div class="oss-window">
-      <OssAlarmWindow :alarmConfig="alarmConfig" />
+      <OssAlarmWindow
+        :alarmConfig="alarmConfig"
+        :socketId="socketId"
+        />
     </div>
   </div>
 </template>
 <script>
+import axios from 'axios';
+
 const title = {
   enable: true,
   name: '告警流水窗'
@@ -18,25 +23,10 @@ const tabs = {
     { key: 3,value: '清除告警' },
   ]
 }
-const window = {
-  headerData: [
-    {key: 'rootAlarmId', value: '根因告警ID'},
-    {key: 'addInfo', value: '告警辅助信息'},
-    {key: 'alarmId', value: '告警标识'},
-    {key: 'alarmSeq', value: '告警流水号'},
-    {key: 'alarmStatus', value: '告警状态'},
-    {key: 'alarmTitle', value: '告警标题'},
-    {key: 'alarmType', value: '告警类型'},
-    {key: 'causeType', value: '原因预归类'},
-    {key: 'eventTime', value: '发生时间'},
-    {key: 'cancelTime', value: '清除时间'},
-    {key: 'neName', value: '网元名称'},
-  ]
-};
+const window = {};
 const alarmRequest = {
   webSocketUrl: 'http://10.1.193.28/rca-sla/AlarmSocket',
   getViewUrl: '/app/sliceInstanceTopo/getViewInfo',
-  subscribeViewUrl: '/topic/mysocketId',
   stopViewUrl: '/app/sliceInstanceTopo/stopSocket',
   startViewUrl: '/app/sliceInstanceTopo/startSocket',
   filterViewUrl: '/app/sliceInstanceTopo/updateSearch',
@@ -44,13 +34,40 @@ const alarmRequest = {
 export default {
   data(){
     return {
-      alarmConfig: {
-        socketId: 'mysocketId',
-        alarmRequest,
-        title,
-        tabs,
-        window,
-      }
+      alarmConfig: {},
+      socketId: null
+    }
+  },
+  created() {
+    this.fetch();
+  },
+  methods: {
+    fetch() {
+      axios.post('/rca-sla/nsi/topo/open/socket', {}, {})
+      .then((response) => {
+        if(response.status === 200 && response.data.retCode === '200') {
+          const { alarmShow, alarmShowTitle, socketId  } = response.data.data;
+          const alarmShowArr = alarmShow.split(',');
+          const alarmShowTitleArr = alarmShowTitle.split(',');
+          window.headerData = alarmShowArr.map((v,i)=>({
+            field: v,
+            colId: v,
+            headerName: alarmShowTitleArr[i]
+          }))
+        alarmRequest.subscribeViewUrl = `/topic/${socketId}`;
+
+        this.alarmConfig = {
+          alarmRequest,
+          title,
+          tabs,
+          window,
+        },
+          this.socketId = socketId;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     }
   }
 }
