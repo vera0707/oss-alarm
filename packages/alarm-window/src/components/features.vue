@@ -1,20 +1,20 @@
 <template>
   <div class="alarm-window-features">
     <div
-      v-if="alarmCountConfig.enable"
+      v-if="levelConfig.enable"
       class="window-features-alarm"
-      :class="alarmCountConfig.alarmClass"
-      :style="alarmCountConfig.alarmStyle"
+      :class="levelConfig.class"
+      :style="levelConfig.style"
     >
       <el-tooltip
-        v-for="item in alarmCountConfig.data"
-        :key="item.name"
-        :content="item.name"
+        v-for="item in levelConfig.data"
+        :key="item[levelConfig.props.field]"
+        :content="item[levelConfig.props.name]"
         placement="bottom"
       >
         <div class="features-alarm-grid">
           <i class="features-alarm-icon" :class="item.class"></i>
-          <span>{{ alarmCountData[item.field] }}</span>
+          <span>{{ levelData[item[levelConfig.props.field]] }}</span>
         </div>
       </el-tooltip>
     </div>
@@ -43,8 +43,11 @@
 <script>
 export default {
   props: {
-    alarmCountConfig: Object,
-    alarmCountData: Object,
+    /* 告警等级配置 */ 
+    levelConfig: Object,
+    /* 告警等级数值 */ 
+    levelData: Object,
+     /* 告警启停状态 */ 
     isStopUpdate: Boolean,
   },
   methods: {

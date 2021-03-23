@@ -11,18 +11,18 @@
     <div
       v-if="tabs.enable"
       class="window-header-tabs"
-      :class="tabs.tabsClass"
-      :style="tabs.tabsStyle"
+      :class="tabs.class"
+      :style="tabs.style"
     >
       <div
         v-for="tab in tabs.data"
-        :key="tab[tabs.props.key]"
+        :key="tab[tabs.props.field]"
         class="tabs-item"
-        :class="{ active: activeTab == tab[tabs.props.key] }"
+        :class="{ active: activeTab == tab[tabs.props.field] }"
         :style="tabs.tabItemStyle"
-        @click="changeAlarmTab(tab[tabs.props.key])"
+        @click="changeAlarmTab(tab[tabs.props.field])"
       >
-        {{ tab[tabs.props.value] }}
+        {{ tab[tabs.props.name] }}
       </div>
     </div>
   </div>
@@ -30,8 +30,11 @@
 <script>
 export default {
   props: {
+    /* 标题 */ 
     title: Object,
+    /* 标签 */ 
     tabs: Object,
+    /* 活动标签 */ 
     activeTab: String
   },
   data() {

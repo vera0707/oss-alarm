@@ -1,19 +1,20 @@
 // 默认配置数据
 export default {
+  socketId: null,
   /* 告警标题 */ 
   title: {
-    enable: true,
+    enable: false,
     name: '告警流水窗',
     class: null,
     style: null
   },
   /* 标签切换 */
   tabs: {
-    enable: true,
+    enable: false,
     value: [],
     props: {
-      key: 'name',
-      field: 'value'
+      field: 'key',
+      name: 'value'
     },
     class: null,
     style: null,
@@ -28,14 +29,14 @@ export default {
       class: null,
       style: null,
       props: {
-        key: 'name',
-        field: 'value'
+        field: 'key',
+        name: 'value'
       },
       data: [
-        { name: "一级告警", field: "1", class: "level2" },
-        { name: "二级告警", field: "2", class: "level3" },
-        { name: "三级告警", field: "3", class: "level4" },
-        { name: "四级告警", field: "4", class: "level5" },
+        { key: "1", value: "一级告警", class: "level2" },
+        { key: "2", value: "二级告警", class: "level3" },
+        { key: "3", value: "三级告警", class: "level4" },
+        { key: "4", value: "四级告警", class: "level5" },
       ],
     },
     /* 暂停/启动功能 */
@@ -51,13 +52,22 @@ export default {
       iconUrl: null,
     },
   },
+  /* webSocket接口 */
+  socketRequest: {
+    webSocketUrl: null,       // 连接
+    subscribeViewUrl: null,   // 窗口监听
+    getViewUrl: null,         // 获取窗口
+    startViewUrl: null,       // 启动窗口推送
+    stopViewUrl: null,        // 关闭窗口推送
+    filterViewUrl: null,       // 更改窗口配置参数
+  },
   /* 窗口设置 */
   window: {
     /* 表头字段 */
     headerList: [],
     headerListrProp: {
-      key: 'field',
-      headerName: 'value'
+      field: 'field',
+      name: 'headerName'
     },
     resizable: true,
     sortable: true,

@@ -1,22 +1,21 @@
 <template>
-  <!-- v-if="socketId && alarmRequest.socketUrl" -->
-  <div class="alarm-window">
+  <div class="alarm-window" v-if="con_socketId && con_socketRequest.webSocketUrl">
     <Header
-      v-if="title.enable || tabs.enable"
-      :title="title"
-      :tabs="tabs"
+      v-if="con_title.enable || con_tabs.enable"
+      :title="con_title"
+      :tabs="con_tabs"
       :activeTab="String(activeTab)"
       @onChangeAlarmTab="changeAlarmTab"
     />
     <Features
-      :alarmCountConfig="features.alarmHeader"
-      :alarmCountData="alarmTableCount"
-      :isStopUpdate="userStopUpdata || systemStopUpdate"
+      :levelConfig="con_features.alarmCount"
+      :levelData="alarmTableCount"
+      :isStopUpdate="isStopUpdate"
       @onUserOperation="userOperation"
     />
     <Window
-      :socketId="socketId"
-      :windowConfig="(this.alarmConfig || {}).window || {}"
+      :socketId="con_socketId"
+      :windowConfig="con_window"
       :alarmListData="alarmUpdataList"
     />
   </div>
@@ -24,6 +23,8 @@
 <script>
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
+import merge from 'lodash/merge'
+import defaltData from '../conf/defaltData';
 import Header from "./components/header";
 import Features from "./components/features";
 import Window from "./components/window";
@@ -40,66 +41,30 @@ export default {
       type: Object,
       default: () => {},
     },
-    socketId: {
-      type: String,
-    },
   },
-  watch: {
-    socketId(newV, oldV) {
-      if (newV && !oldV) {
+  watch:{
+    alarmConfig:{
+      deep: true,
+      // immediate: true,
+      handler(val = {}){
+        const _config = merge(defaltData,val);
+        Object.keys(_config).forEach(name=>{
+          if(JSON.stringify(this[`con_${name}`]) !== JSON.stringify(_config[name])){
+            this[`con_${name}`] = _config[name];
+          }
+        });
         this.startWebsocket();
       }
     },
+    isStopUpdate(val){
+      if(val) this.startUpdateAlarmData()
+      else this.stopUpdateAlarmData()
+    }
   },
   computed: {
-    alarmRequest() {
-      return (this.alarmConfig || {}).alarmRequest || {};
-    },
-    title() {
-      let title = (this.alarmConfig || {}).title;
-      if (!title) return { enable: false };
-      if (typeof title === "string") return { enable: true, name: title };
-      if (title.name) return title;
-      return { enable: false };
-    },
-    tabs() {
-      const tabs = (this.alarmConfig || {}).tabs || {};
-      if (tabs.data && tabs.data.length) {
-        const resTabs = {
-          enable: true,
-          props: { key: "key", value: "value" },
-          ...tabs,
-        };
-        this.activeTab = tabs.data[0][resTabs.props.key];
-        return resTabs;
-      }
-      return { enable: false };
-    },
-    features() {
-      return {
-        alarmHeader: {
-          enable: true,
-          alarmClass: null,
-          alarmStyle: null,
-          data: [
-            { name: "一级告警", field: "1", class: "level2" },
-            { name: "二级告警", field: "2", class: "level3" },
-            { name: "三级告警", field: "3", class: "level4" },
-            { name: "四级告警", field: "4", class: "level5" },
-          ],
-        },
-        launcher: {
-          enable: true,
-          iconUrl: null,
-          isAutoPush: true,
-          autoPushTime: 1000,
-        },
-        lock: {
-          enable: true,
-          iconUrl: null,
-        },
-      };
-    },
+    isStopUpdate() {
+      return this.userStopUpdata || this.systemStopUpdate
+    }
   },
   data() {
     return {
@@ -111,23 +76,27 @@ export default {
       socket: null,
       stompClient: null,
       connectStatus: false,
+      con_title: {},
+      con_tabs: {},
+      con_features: {},
+      con_socketRequest: {},
+      con_window: {},
+      con_socketId: null,
     };
-  },
-  created() {
-    if(this.socketId) {
-      this.startWebsocket();
-    }
   },
   methods: {
     startWebsocket() {
-      new Promise((resolve) => {
-        this.initWebSocket(resolve);
-      }).then(() => {
-        this.quertViewData();
-      });
+      const { con_socketId, con_socketRequest,connectStatus} = this;
+      if(con_socketId && con_socketRequest.webSocketUrl && !connectStatus) {
+        new Promise((resolve) => {
+          this.initWebSocket(resolve);
+          }).then(() => {
+            this.quertViewData();
+          });
+        }
     },
     initWebSocket(resolve) {
-      this.socket = new SockJS(`${this.alarmRequest.webSocketUrl}`);
+      this.socket = new SockJS(`${this.con_socketRequest.webSocketUrl}`);
       this.stompClient = Stomp.over(this.socket);
       this.stompClient.connect({}, () => {
         this.connectStatus = true;
@@ -135,9 +104,9 @@ export default {
       });
     },
     quertViewData() {
-      this.stompClient.send(this.alarmRequest.getViewUrl, {}, this.socketId);
+      this.stompClient.send(this.con_socketRequest.getViewUrl, {}, this.con_socketId);
       this.stompClient.subscribe(
-        this.alarmRequest.subscribeViewUrl,
+        this.con_socketRequest.subscribeViewUrl,
         (response) => {
           const { data, dataType = "", dataCount = {} } = JSON.parse(
             response.body
@@ -157,10 +126,43 @@ export default {
     userOperation({ type, status = true }) {
       this[`userOperation${type}`](status)
     },
-    // 用户暂停/启动流水窗
+    /* 用户暂停/启动流水窗 */
     userOperationUserUpdate(isStopUpdate) {
       this.userStopUpdata = isStopUpdate;
-    }
+    },
+    /* 启动监听流水窗 */
+    startUpdateAlarmData () {
+      this.stompClient.send(this.con_socketRequest.startViewUrl,
+        {},
+        JSON.stringify([this.con_socketId])
+      )
+    },
+    /* 暂停流水窗 */
+    stopUpdateAlarmData () {
+      this.stompClient.send(
+        this.con_socketRequest.stopViewUrl,
+        {},
+        JSON.stringify([this.con_socketId])
+      )
+    },
+    /* 更改筛选条件 */
+    updataAlarmSearch (filter) {
+      if (this.connectStatus && this.alarmId) {
+        const params = {
+          ...filter,
+          websocketId: this.con_socketId,
+        };
+        if(this.con_tabs.enable) {
+          params[this.con_tabs.props.field]
+        }
+        
+        this.stompClient.send(
+          this.con_socketRequest.filterViewUrl, {},
+          JSON.stringify(params)
+        )
+        this.userOperationUserUpdate(false)
+      }
+    },
   },
 };
 </script>

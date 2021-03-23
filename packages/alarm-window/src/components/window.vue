@@ -2,7 +2,7 @@
   <ag-grid-vue
     :ref="`ossWindow_${socketId}`"
     class="ag-theme-balham oss"
-    :columnDefs="windowConfig.headerData"
+    :columnDefs="windowConfig.headerList"
     :rowData="filterTableList(alarmTableList)"
     :defaultColDef="{resizable: true, sortable: true, filter: true,}"
     :localeText="localeText"
