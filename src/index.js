@@ -10,6 +10,7 @@ requireComponent.keys().forEach((filePath) => {
   components[key] = componentConfig.default || componentConfig;
 });
 
+
 const install = (Vue) => {
   if (install.installed) return;
   Object.keys(components).forEach((key) => {

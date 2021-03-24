@@ -51,6 +51,10 @@ export default {
       enable: true,
       iconUrl: null,
     },
+    autoStopTimer: {
+      enable: true,
+      autoTime: 5000,
+    },
   },
   /* webSocket接口 */
   socketRequest: {
@@ -69,6 +73,7 @@ export default {
       field: 'field',
       name: 'headerName'
     },
+    rowHeight: 32,
     resizable: true,
     sortable: true,
     filter: true

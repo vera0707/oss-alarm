@@ -1,35 +1,47 @@
 <template>
   <ag-grid-vue
-    :ref="`ossWindow_${socketId}`"
+    ref="ossAgWindow"
     class="ag-theme-balham oss"
-    :columnDefs="windowConfig.headerList"
+    :columnDefs="columnDefs"
     :rowData="filterTableList(alarmTableList)"
-    :defaultColDef="{resizable: true, sortable: true, filter: true,}"
+    :pinnedTopRowData="pinnedTopRowData"
+    :defaultColDef="{ resizable: true, sortable: true, filter: true }"
     :localeText="localeText"
+    :animateRows="true"
+    :rowHeight="windowConfig.rowHeight"
+    :rowBuffer="Math.ceil(windowHeight/windowConfig.rowHeight)"
+    rowSelection="multiple"
+    @grid-ready="onGridReady"
+    @selectionChanged="onSelectionChanged"
   ></ag-grid-vue>
 </template>
 <script>
 import { AgGridVue } from "ag-grid-vue";
 
 const localeText = {
-  equals: '相等',
-  notEqual: '不相等',
-  lessThan: '小于',
-  greaterThan: '大于',
-  lessThanOrEqual: '小于等于',
-  greaterThanOrEqual: '大于等于',
-  inRange: '范围',
-  contains: '包含',
-  notContains: '不包含',
-  startsWith: '开始于',
-  endsWith: '结束于',
-  noRowsToShow: '暂无数据',
+  equals: "相等",
+  notEqual: "不相等",
+  lessThan: "小于",
+  greaterThan: "大于",
+  lessThanOrEqual: "小于等于",
+  greaterThanOrEqual: "大于等于",
+  inRange: "范围",
+  contains: "包含",
+  notContains: "不包含",
+  startsWith: "开始于",
+  endsWith: "结束于",
+  noRowsToShow: "暂无数据",
 };
 
 export default {
   props: {
+    /* 流水窗ID */
     socketId: String,
+    /* 流水窗配置 */
     windowConfig: Object,
+    /* 是否支持数据锁定🔐 */
+    canLock: Boolean,
+    /* 窗口更新数据 */
     alarmListData: Object,
   },
   components: {
@@ -42,35 +54,89 @@ export default {
       handler(newV) {
         const { dataType, data, clearData } = newV;
         if (dataType && data) {
-          if (dataType === 'listInfo') this.alarmTableList = data;
-          else if (dataType === 'kafkaAlarm' && data.length) {
+          if (dataType === "listInfo") this.alarmTableList = data;
+          else if (dataType === "kafkaAlarm" && data.length) {
             const { alarmTableList } = this;
             alarmTableList.unshift(...data);
             if (alarmTableList.length > 1000) alarmTableList.length = 1000;
             this.alarmTableList = alarmTableList;
           }
           if (clearData) {
-            const {alarmClearData} = this;
+            const { alarmClearData } = this;
             alarmClearData.unshift(...clearData);
             if (alarmClearData.length > 50) alarmClearData.length = 50;
             this.alarmClearData = alarmClearData;
           }
         }
       },
+    },
+  },
+  computed: {
+    columnDefs() {
+      const columnDefs = this.windowConfig.headerList || [];
+      if (this.canLock) {
+        columnDefs.unshift(
+          {
+            colId: "colId",
+            headerName: "",
+            field: "colId",
+            checkboxSelection: true,
+            headerCheckboxSelection: true,
+            pinned: "left",
+            filter: false,
+            sortable: false,
+            width: 35,
+            lockPosition: true,
+          },
+          {
+            colId: "isFreeze",
+            headerName: "状态标识",
+            field: "isFreeze",
+            filter: false,
+            sortable: false,
+            pinned: "left",
+            width: 60,
+            lockPosition: true,
+            cellRenderer: () => '<div class="lock-icon"></div>',
+          }
+        );
+      }
+      return columnDefs;
+    },
+  },
+  mounted(){
+    this.windowHeight = this.$refs.ossAgWindow.$el.offsetHeight
+    window.onresize = () => {
+      this.windowHeight = this.$refs.ossAgWindow.$el.offsetHeight
     }
   },
   data() {
     return {
-      alarmTableList: [],
-      alarmClearData: [],
-      localeText
-    }
+      alarmTableList: [],  // 列表数据
+      pinnedTopRowData:[], // 锁定数据🔒
+      alarmClearData: [],  // 清除数据
+      localeText,          // 汉化
+      windowHeight: 300,   // 窗口大小
+    };
   },
-  methods:{
+  methods: {
+    onGridReady (params) {
+      this.gridApi = params.api
+      this.columnApi = params.columnApi
+    },    
     filterTableList(tableList) {
-      return tableList.filter((v) => !this.alarmClearData.includes(v.rowkey))
-    }
-  }
+      return tableList.filter((v) => !this.alarmClearData.includes(v.rowkey));
+    },
+    lockMultipleRows() {
+      const lockRows = this.gridApi.getSelectedRows()
+      this.gridApi.updateRowData({ remove: lockRows })
+      this.pinnedTopRowData.push(...lockRows)
+    },
+    onSelectionChanged(event) {
+      const dataLength = event.api.getSelectedNodes().length;
+      this.$emit('changeSystemUpdata',dataLength !== 0, true)
+    },
+  },
 };
 </script>
 <style lang="scss">
@@ -128,14 +194,14 @@ export default {
   .ag-pinned-right-header {
     border: none;
   }
-  // .lock-icon {
-  //   width: 10px;
-  //   height: 10px;
-  //   background-image: url("../../../../assets/unlock.svg");
-  //   background-size: 10px;
-  //   margin-top: 10px;
-  //   margin-right: 5px;
-  // }
+  .lock-icon {
+    width: 10px;
+    height: 10px;
+    background-image: url("images/alarm-window/unlock.svg");
+    background-size: 10px;
+    margin-top: 10px;
+    margin-right: 5px;
+  }
   // .dispatch-icon {
   //   width: 10px;
   //   height: 10px;
@@ -160,9 +226,9 @@ export default {
   //   margin-top: 10px;
   //   margin-right: 5px;
   // }
-  // .ag-floating-top .lock-icon {
-  //   background-image: url("../../../../assets/lock_blue.svg");
-  //   margin-right: 5px;
-  // }
+  .ag-floating-top .lock-icon {
+    background-image: url("images/alarm-window/lock_blue.svg");
+    margin-right: 5px;
+  }
 }
 </style>

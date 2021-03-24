@@ -11,12 +11,16 @@
       :levelConfig="con_features.alarmCount"
       :levelData="alarmTableCount"
       :isStopUpdate="isStopUpdate"
+      :canLock="can_lock"
       @onUserOperation="userOperation"
     />
     <Window
+      ref="ossWindow"
       :socketId="con_socketId"
+      :canLock="can_lock"
       :windowConfig="con_window"
       :alarmListData="alarmUpdataList"
+      @changeSystemUpdata="systemOperationUpdate"
     />
   </div>
 </template>
@@ -28,6 +32,8 @@ import defaltData from '../conf/defaltData';
 import Header from "./components/header";
 import Features from "./components/features";
 import Window from "./components/window";
+
+let timer = null;
 
 export default {
   name: "OssAlarmWindow",
@@ -64,7 +70,11 @@ export default {
   computed: {
     isStopUpdate() {
       return this.userStopUpdata || this.systemStopUpdate
-    }
+    },
+    can_lock() {
+      const {lock} = this.con_features;
+      return Boolean(typeof lock === 'object' ? lock.enable : lock)
+    },
   },
   data() {
     return {
@@ -126,9 +136,25 @@ export default {
     userOperation({ type, status = true }) {
       this[`userOperation${type}`](status)
     },
+    /* 系统暂停流水窗 */
+    systemOperationUpdate(isStopSystem,isAutoRestore) {
+      if(!isStopSystem && isAutoRestore && this.con_features.autoStopTimer.enable) {
+        this.setSyetemUpdataTimer();
+      }
+      if(isStopSystem && !this.isStopUpdate){
+        this.systemStopUpdate = isStopSystem;
+        this.$message.warning('检测到您正在操作，已暂停窗口刷新，可手动恢复~')
+      }
+    },
     /* 用户暂停/启动流水窗 */
-    userOperationUserUpdate(isStopUpdate) {
-      this.userStopUpdata = isStopUpdate;
+    userOperationUserUpdate(isStopUser) {
+      this.userStopUpdata = isStopUser;
+      this.systemStopUpdate = false;
+      this.clearSystemTimer()
+    },
+    /* 用户锁定🔐数据 */
+    userOperationLockMultipleData() {
+      this.$refs.ossWindow.lockMultipleRows();
     },
     /* 启动监听流水窗 */
     startUpdateAlarmData () {
@@ -162,6 +188,21 @@ export default {
         )
         this.userOperationUserUpdate(false)
       }
+    },
+    setSyetemUpdataTimer() {
+      this.clearSystemTimer()
+      timer = setTimeout(()=>{
+        if(this.isStopUpdate) {
+          this.systemStopUpdate = false;
+          this.userStopUpdata = false;
+          this.$message.warning('检测到长久无操作，已为您恢复窗口刷新~');
+        }
+        this.clearSystemTimer()
+      },this.con_features.autoStopTimer.autoTime)
+    },
+    clearSystemTimer() {
+      if(timer) clearTimeout(timer);
+      timer = null;
     },
   },
 };

@@ -31,7 +31,7 @@
           @click="userOperation('UserUpdate', true)"
         ></div>
       </el-tooltip>
-      <el-tooltip content="锁定置顶" placement="bottom">
+      <el-tooltip v-if="canLock" content="锁定置顶" placement="bottom">
         <div
           class="features-control-icon features-lock-icon"
           @click="userOperation('LockMultipleData')"
@@ -49,6 +49,8 @@ export default {
     levelData: Object,
      /* 告警启停状态 */ 
     isStopUpdate: Boolean,
+    /* 是否支持数据锁定🔐 */
+    canLock: Boolean,
   },
   methods: {
     userOperation(type, status){
