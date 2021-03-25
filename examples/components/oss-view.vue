@@ -1,12 +1,14 @@
 <template>
   <transition name="page-move">
     <div>
-       <div>Welcome to OSS-ALARM components</div>
       <router-view />
     </div>
   </transition>
 </template>
 <style lang="scss" scoped>
+.page-move{
+  background: #0e0e0e;
+}
 .page-move-enter, .page-move-leave-active {
   transform: translateX(100%);
 }

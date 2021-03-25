@@ -1,10 +1,12 @@
 <template>
-  <div>
-    <div>告警流水窗：地址/alarm-window 组件名：OssAlarmWindow</div>
+  <div class="oss-window-container">
+    <div class="oss-window-logo"></div>
+    <!-- <img src="images/logo.png" width="20" height="20" class="" alt="" /> -->
+    <div class="oss-window-header">OSS ALARM WINDOW</div>
     <div class="oss-window">
       <OssAlarmWindow
         :alarmConfig="alarmConfig"
-        />
+      />
     </div>
   </div>
 </template>
@@ -68,10 +70,41 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.oss-window{
+.oss-window-container{
   display: block;
-  width: 1000px;
-  height: 800px;
-  margin: 50px auto;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('images/alarm-window/example_bg.jpeg');
+  backface-visibility: hidden;
+  opacity: 0.9;
+  position: relative;
+  overflow: hidden;
+
+  .oss-window-header{
+    position: absolute;
+    font-size: 34px;
+    font-weight: bold;
+    left: 80px;
+    top: 30px;
+    color: white;
+    font-family: proxima-nova,-apple-system,BlinkMacSystemFont,segoe ui,Roboto,helvetica neue,Arial,sans-serif;
+  }
+  .oss-window-logo{
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    background: url('images/logo.png');
+    background-size: 40px;
+  }
+  .oss-window{
+    width: 50vw;
+    height: 50vh;
+    position: absolute;
+    top: 15vh;
+    left: 25vw;
+    box-shadow: 2px 2px 10px rgba(0,0,0,.5);
+  }
 }
 </style>
