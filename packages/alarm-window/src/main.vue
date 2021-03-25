@@ -24,6 +24,11 @@
       :windowConfig="con_window"
       :alarmListData="alarmUpdataList"
       @changeSystemUpdata="systemOperationUpdate"
+      @systemOperation="systemOperation"
+    />
+    <Controller
+      :controCenter="systemControCenter"
+      @closeControCenter="systemOperation"
     />
   </div>
 </template>
@@ -35,6 +40,7 @@ import defaltData from "../conf/defaltData";
 import Header from "./components/header";
 import Features from "./components/features";
 import Window from "./components/window";
+import Controller from './components/controller';
 
 let timer = null;
 
@@ -44,6 +50,7 @@ export default {
     Header,
     Features,
     Window,
+    Controller,
   },
   props: {
     alarmConfig: {
@@ -93,13 +100,14 @@ export default {
   data() {
     return {
       activeTab: null,
-      userStopUpdata: false, // 用户手动关闭刷新功能
-      systemStopUpdate: false, // 系统关闭刷新功能
-      alarmUpdataList: {},
-      alarmTableCount: {},
+      userStopUpdata: false,   /* 用户手动关闭刷新功能 */
+      systemStopUpdate: false, /* 系统关闭刷新功能 */
+      systemControCenter: {},    /* 系统操作控制 */
+      alarmUpdataList: {},     /* socket更新窗体数据 */
+      alarmTableCount: {},     /* socket更新告警数量数据 */
       socket: null,
       stompClient: null,
-      connectStatus: false,
+      connectStatus: false,    /* socket连接状态 */
       con_title: {},
       con_tabs: {},
       con_features: {},
@@ -150,6 +158,10 @@ export default {
     },
     changeAlarmTab(key) {
       this.activeTab = key;
+    },
+    systemOperation(systemData = {}){
+      this.systemControCenter = systemData;
+      this.systemOperationUpdate(!!systemData.type,true);
     },
     userOperation({ type, status = true }) {
       this[`userOperation${type}`](status);

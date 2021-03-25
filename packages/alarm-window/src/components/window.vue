@@ -127,12 +127,16 @@ export default {
     },
     cellClicked(target) {
       const {field} = target.column.colDef;
-      console.log('====',target)
       if(field === 'isFreeze') {
         if(target.rowPinned === 'top') {
           pinnedTopRowData.splice(target.rowIndex,1);
           this.gridApi.setPinnedTopRowData(pinnedTopRowData);
         }
+      }else if(field !== 'colId'){
+        this.$emit('systemOperation', {
+          type: 'detail',
+          data: target.data
+        })
       }
     },  
     filterTableList(tableList) {

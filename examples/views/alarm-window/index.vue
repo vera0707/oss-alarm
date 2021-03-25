@@ -1,7 +1,6 @@
 <template>
   <div class="oss-window-container">
     <div class="oss-window-logo"></div>
-    <!-- <img src="images/logo.png" width="20" height="20" class="" alt="" /> -->
     <div class="oss-window-header">OSS ALARM WINDOW</div>
     <div class="oss-window">
       <OssAlarmWindow
@@ -76,7 +75,6 @@ export default {
   height: 100vh;
   background-image: url('images/alarm-window/example_bg.jpeg');
   backface-visibility: hidden;
-  opacity: 0.9;
   position: relative;
   overflow: hidden;
 
@@ -104,7 +102,7 @@ export default {
     position: absolute;
     top: 15vh;
     left: 25vw;
-    box-shadow: 2px 2px 10px rgba(0,0,0,.5);
+    box-shadow: 0px 0px 500px black;
   }
 }
 </style>

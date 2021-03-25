@@ -46,7 +46,7 @@ const configuration = merge(commonConfig, {
       poll: config.dev.poll,
     },
     proxy:{
-      '/rca-sla/nsi/topo':{
+      '/rca-sla':{
         target: 'http://10.1.193.28:10002/',
         secure: false,
         changeOrigin: true
