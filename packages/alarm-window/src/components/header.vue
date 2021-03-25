@@ -15,7 +15,7 @@
       :style="tabs.style"
     >
       <div
-        v-for="tab in tabs.data"
+        v-for="tab in tabs.value"
         :key="tab[tabs.props.field]"
         class="tabs-item"
         :class="{ active: activeTab == tab[tabs.props.field] }"
@@ -59,7 +59,7 @@ export default {
   background: rgba(123, 147, 167, 0.1);
   padding: 0 16px;
   padding-left: 15px;
-  padding-right: 76px;
+  padding-right: 15px;
   position: relative;
 
   .window-header-title {

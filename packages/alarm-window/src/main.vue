@@ -1,5 +1,8 @@
 <template>
-  <div class="alarm-window" v-if="con_socketId && con_socketRequest.webSocketUrl">
+  <div
+    class="alarm-window"
+    v-if="con_socketId && con_socketRequest.webSocketUrl"
+  >
     <Header
       v-if="con_title.enable || con_tabs.enable"
       :title="con_title"
@@ -27,8 +30,8 @@
 <script>
 import Stomp from "stompjs";
 import SockJS from "sockjs-client";
-import merge from 'lodash/merge'
-import defaltData from '../conf/defaltData';
+import merge from "lodash/merge";
+import defaltData from "../conf/defaltData";
 import Header from "./components/header";
 import Features from "./components/features";
 import Window from "./components/window";
@@ -48,32 +51,43 @@ export default {
       default: () => {},
     },
   },
-  watch:{
-    alarmConfig:{
+  watch: {
+    alarmConfig: {
       deep: true,
-      // immediate: true,
-      handler(val = {}){
-        const _config = merge(defaltData,val);
-        Object.keys(_config).forEach(name=>{
-          if(JSON.stringify(this[`con_${name}`]) !== JSON.stringify(_config[name])){
+      handler(val = {}) {
+        const _config = merge(defaltData, val);
+        Object.keys(_config).forEach((name) => {
+          if (
+            JSON.stringify(this[`con_${name}`]) !==
+            JSON.stringify(_config[name])
+          ) {
             this[`con_${name}`] = _config[name];
           }
         });
+        const { enable, value, props } = this.con_tabs;
+        if (enable && value.length) {
+          if (
+            !this.activeTab ||
+            JOSN.stringify(value).includes(this.activeTab)
+          ) {
+            this.activeTab = value[0][props.field];
+          }
+        }
         this.startWebsocket();
-      }
+      },
     },
-    isStopUpdate(val){
-      if(val) this.startUpdateAlarmData()
-      else this.stopUpdateAlarmData()
-    }
+    isStopUpdate(val) {
+      if (val) this.startUpdateAlarmData();
+      else this.stopUpdateAlarmData();
+    },
   },
   computed: {
     isStopUpdate() {
-      return this.userStopUpdata || this.systemStopUpdate
+      return this.userStopUpdata || this.systemStopUpdate;
     },
     can_lock() {
-      const {lock} = this.con_features;
-      return Boolean(typeof lock === 'object' ? lock.enable : lock)
+      const { lock } = this.con_features;
+      return Boolean(typeof lock === "object" ? lock.enable : lock);
     },
   },
   data() {
@@ -96,14 +110,14 @@ export default {
   },
   methods: {
     startWebsocket() {
-      const { con_socketId, con_socketRequest,connectStatus} = this;
-      if(con_socketId && con_socketRequest.webSocketUrl && !connectStatus) {
+      const { con_socketId, con_socketRequest, connectStatus } = this;
+      if (con_socketId && con_socketRequest.webSocketUrl && !connectStatus) {
         new Promise((resolve) => {
           this.initWebSocket(resolve);
-          }).then(() => {
-            this.quertViewData();
-          });
-        }
+        }).then(() => {
+          this.quertViewData();
+        });
+      }
     },
     initWebSocket(resolve) {
       this.socket = new SockJS(`${this.con_socketRequest.webSocketUrl}`);
@@ -114,7 +128,11 @@ export default {
       });
     },
     quertViewData() {
-      this.stompClient.send(this.con_socketRequest.getViewUrl, {}, this.con_socketId);
+      this.stompClient.send(
+        this.con_socketRequest.getViewUrl,
+        {},
+        this.con_socketId
+      );
       this.stompClient.subscribe(
         this.con_socketRequest.subscribeViewUrl,
         (response) => {
@@ -134,74 +152,80 @@ export default {
       this.activeTab = key;
     },
     userOperation({ type, status = true }) {
-      this[`userOperation${type}`](status)
+      this[`userOperation${type}`](status);
     },
     /* 系统暂停流水窗 */
-    systemOperationUpdate(isStopSystem,isAutoRestore) {
-      if(!isStopSystem && isAutoRestore && this.con_features.autoStopTimer.enable) {
+    systemOperationUpdate(isStopSystem, isAutoRestore) {
+      if (
+        !isStopSystem &&
+        isAutoRestore &&
+        this.con_features.autoStopTimer.enable
+      ) {
         this.setSyetemUpdataTimer();
       }
-      if(isStopSystem && !this.isStopUpdate){
+      if (isStopSystem && !this.isStopUpdate) {
         this.systemStopUpdate = isStopSystem;
-        this.$message.warning('检测到您正在操作，已暂停窗口刷新，可手动恢复~')
+        this.$message.warning("检测到您正在操作，已暂停窗口刷新，可手动恢复~");
       }
     },
     /* 用户暂停/启动流水窗 */
     userOperationUserUpdate(isStopUser) {
       this.userStopUpdata = isStopUser;
       this.systemStopUpdate = false;
-      this.clearSystemTimer()
+      this.clearSystemTimer();
     },
     /* 用户锁定🔐数据 */
     userOperationLockMultipleData() {
       this.$refs.ossWindow.lockMultipleRows();
     },
     /* 启动监听流水窗 */
-    startUpdateAlarmData () {
-      this.stompClient.send(this.con_socketRequest.startViewUrl,
+    startUpdateAlarmData() {
+      this.stompClient.send(
+        this.con_socketRequest.startViewUrl,
         {},
         JSON.stringify([this.con_socketId])
-      )
+      );
     },
     /* 暂停流水窗 */
-    stopUpdateAlarmData () {
+    stopUpdateAlarmData() {
       this.stompClient.send(
         this.con_socketRequest.stopViewUrl,
         {},
         JSON.stringify([this.con_socketId])
-      )
+      );
     },
     /* 更改筛选条件 */
-    updataAlarmSearch (filter) {
+    updataAlarmSearch(filter) {
       if (this.connectStatus && this.alarmId) {
         const params = {
           ...filter,
           websocketId: this.con_socketId,
         };
-        if(this.con_tabs.enable) {
-          params[this.con_tabs.props.field]
+        if (this.con_tabs.enable) {
+          params[this.con_tabs.props.field];
         }
-        
+
         this.stompClient.send(
-          this.con_socketRequest.filterViewUrl, {},
+          this.con_socketRequest.filterViewUrl,
+          {},
           JSON.stringify(params)
-        )
-        this.userOperationUserUpdate(false)
+        );
+        this.userOperationUserUpdate(false);
       }
     },
     setSyetemUpdataTimer() {
-      this.clearSystemTimer()
-      timer = setTimeout(()=>{
-        if(this.isStopUpdate) {
+      this.clearSystemTimer();
+      timer = setTimeout(() => {
+        if (this.isStopUpdate) {
           this.systemStopUpdate = false;
           this.userStopUpdata = false;
-          this.$message.warning('检测到长久无操作，已为您恢复窗口刷新~');
+          this.$message.warning("检测到长久无操作，已为您恢复窗口刷新~");
         }
-        this.clearSystemTimer()
-      },this.con_features.autoStopTimer.autoTime)
+        this.clearSystemTimer();
+      }, this.con_features.autoStopTimer.autoTime);
     },
     clearSystemTimer() {
-      if(timer) clearTimeout(timer);
+      if (timer) clearTimeout(timer);
       timer = null;
     },
   },

@@ -54,7 +54,6 @@ export default {
             window: {
               headerList: alarmShowArr.map((v,i)=>({
                 field: v,
-                colId: v,
                 headerName: alarmShowTitleArr[i]
               }))
             },

@@ -4,7 +4,12 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 const requireRouter = require.context('../views', true, /\index.vue/)
-let routes = []
+let routes = [
+  {
+    path: '/',
+    redirect: '/alarm-window',
+  },
+]
 
 requireRouter.keys().forEach(fileName => {
   const name = fileName.split('/')[1]

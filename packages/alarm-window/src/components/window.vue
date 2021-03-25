@@ -4,14 +4,16 @@
     class="ag-theme-balham oss"
     :columnDefs="columnDefs"
     :rowData="filterTableList(alarmTableList)"
-    :pinnedTopRowData="pinnedTopRowData"
+    :pinnedTopRowData="[]"
     :defaultColDef="{ resizable: true, sortable: true, filter: true }"
     :localeText="localeText"
     :animateRows="true"
     :rowHeight="windowConfig.rowHeight"
+    :suppressRowClickSelection="true"
     :rowBuffer="Math.ceil(windowHeight/windowConfig.rowHeight)"
     rowSelection="multiple"
     @grid-ready="onGridReady"
+    @cellClicked="cellClicked"
     @selectionChanged="onSelectionChanged"
   ></ag-grid-vue>
 </template>
@@ -32,6 +34,8 @@ const localeText = {
   endsWith: "结束于",
   noRowsToShow: "暂无数据",
 };
+
+const pinnedTopRowData = [] // 锁定数据🔒
 
 export default {
   props: {
@@ -77,7 +81,6 @@ export default {
       if (this.canLock) {
         columnDefs.unshift(
           {
-            colId: "colId",
             headerName: "",
             field: "colId",
             checkboxSelection: true,
@@ -89,7 +92,6 @@ export default {
             lockPosition: true,
           },
           {
-            colId: "isFreeze",
             headerName: "状态标识",
             field: "isFreeze",
             filter: false,
@@ -113,7 +115,6 @@ export default {
   data() {
     return {
       alarmTableList: [],  // 列表数据
-      pinnedTopRowData:[], // 锁定数据🔒
       alarmClearData: [],  // 清除数据
       localeText,          // 汉化
       windowHeight: 300,   // 窗口大小
@@ -123,14 +124,25 @@ export default {
     onGridReady (params) {
       this.gridApi = params.api
       this.columnApi = params.columnApi
-    },    
+    },
+    cellClicked(target) {
+      const {field} = target.column.colDef;
+      console.log('====',target)
+      if(field === 'isFreeze') {
+        if(target.rowPinned === 'top') {
+          pinnedTopRowData.splice(target.rowIndex,1);
+          this.gridApi.setPinnedTopRowData(pinnedTopRowData);
+        }
+      }
+    },  
     filterTableList(tableList) {
       return tableList.filter((v) => !this.alarmClearData.includes(v.rowkey));
     },
     lockMultipleRows() {
       const lockRows = this.gridApi.getSelectedRows()
+      pinnedTopRowData.push(...lockRows);
       this.gridApi.updateRowData({ remove: lockRows })
-      this.pinnedTopRowData.push(...lockRows)
+      this.gridApi.setPinnedTopRowData(pinnedTopRowData);
     },
     onSelectionChanged(event) {
       const dataLength = event.api.getSelectedNodes().length;
