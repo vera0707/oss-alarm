@@ -2,14 +2,16 @@
   "name": "oss-alarm",
   "version": "1.0.0",
   "description": "A Component about oss-alarm",
-  "main": "lib/oss-alarm.common.js",
+  "main": "./lib/oss-alarm.common.js",
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack serve --inline --config ./build/webpack.dev.config.js",
-    "build": "webpack --config ./build/webpack.prod.config.js && npm run build:component",
+    "prod": "webpack --config ./build/webpack.prod.config.js && npm run build:component",
+    "build": "webpack --config ./build/webpack.prod.config.js",
     "build:component": "webpack --config ./build/webpack.component.config.js",
     "eslint": "eslint --fix --ext .js,.vue src",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
   },
+  "author": "xieyuxuan",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vera0707/oss-alarm-window.git"
@@ -20,26 +22,17 @@
     "vue",
     "components"
   ],
-  "author": "xieyuxuan",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/vera0707/oss-alarm-window/issues"
   },
-  "engines": {
-    "node": ">= 14.0.0",
-    "npm": ">= 6.0.0"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ],
   "homepage": "https://github.com/vera0707/oss-alarm-window#readme",
   "dependencies": {
     "ag-grid-community": "^23.0.2",
     "ag-grid-vue": "^23.0.2",
     "babel-eslint": "^10.1.0",
     "clean-webpack-plugin": "^3.0.0",
+    "core-js": "^3.9.1",
     "element-ui": "^2.15.1",
     "eslint": "^7.22.0",
     "eslint-plugin-vue": "^7.7.0",
@@ -47,6 +40,7 @@
     "node-notifier": "^9.0.0",
     "sockjs-client": "^1.5.0",
     "stompjs": "^2.3.3",
+    "uglifyjs-webpack-plugin": "^2.2.0",
     "vue": "^2.6.12"
   },
   "devDependencies": {
@@ -71,14 +65,12 @@
     "postcss-loader": "^5.0.0",
     "sass": "^1.32.8",
     "sass-loader": "^11.0.1",
-    "uglifyjs-webpack-plugin": "^2.2.0",
     "url-loader": "^4.1.1",
     "vue-class-component": "^7.2.6",
     "vue-loader": "^15.9.6",
     "vue-property-decorator": "^9.1.2",
     "vue-router": "^3.5.1",
     "vue-template-compiler": "^2.6.12",
-    "vuex": "^3.6.2",
     "webpack": "^5.24.4",
     "webpack-cli": "^4.5.0",
     "webpack-dev-server": "^3.11.2",
@@ -95,6 +87,17 @@
     }
   },
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
-  }
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
+  "engines": {
+    "node": ">= 14.0.0",
+    "npm": ">= 6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not ie <= 8"
+  ]
 }

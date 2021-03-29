@@ -20,7 +20,8 @@ module.exports = {
       productionSourceMap: false,
       assetsSubDirectory: 'static',
       assetsRoot: path.resolve(__dirname, '../lib'),
-      assetsPublicPath: '/'
+      assetsPublicPath: '/',
+      cssSourceMap: false,
     },
     examples: {
       assetsRoot: path.resolve(__dirname, '../dist/examples'),

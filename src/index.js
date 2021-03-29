@@ -4,6 +4,7 @@ import camelCase from 'lodash/camelCase';
 const requireComponent = require.context('../packages', true, /\.js/);
 const components = {};
 
+
 requireComponent.keys().forEach((filePath) => {
   const componentConfig = requireComponent(filePath);
   const key = upperFirst(camelCase(filePath.split('/')[1]));

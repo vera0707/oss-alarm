@@ -1,7 +1,8 @@
-<p font-size="40px" align="center">基于 Vue 和 Webpack 构建的告警组件库</p>
+<p font-size="40px" align="center">基于 Vue2.0 和 Webpack 构建的告警组件库</p>
 
-<h2 align="center">安装 & 使用(node>v12)</h2>
-  
+<h2 align="center">安装 & 使用(node>v12) </h2>
+<h4>注：本版本暂不支持vue3</h4> 
+
 ```bash
 npm install oss-alarm -S
 ```  
@@ -20,10 +21,12 @@ Vue.use(OssAlarm)
 ```js
 import Vue from 'vue'
 
-import alarmWindow from 'oss-alam/lib/alarm-window/index.js'
+import OssAlarmWindow from 'oss-alam/lib/alarm-window/index.js'
+import 'oss-alam/lib/alarm-window/index.css'
 
-Vue.use(alarmWindow)
+Vue.use(OssAlarmWindow)
 ```
+
 
 ### 开发
 
@@ -35,35 +38,24 @@ cd oss-alarm
 npm install 
 
 npm run dev
-
-# 启动文档开发
-
-npm run docs
 ```
 
 ### 命令介绍
 
 ```bash
 
-npm run dev             #启动组件开发
+npm run dev               #启动组件开发
 
-npm run docs            #启动文档开发
+npm run prod              #整体构建
 
-npm run prod            #组件构建
+npm run build             #线上构建
 
-npm run build           #整体构建
-
-npm run build:component #按需组件构建
+npm run build:component   #按需组件构建
 
 npm run eslint            #eslint测试
 ```
 
-<!-- 问题记录 -->
-
-<!-- 1.dev环境的热更新配置了没有起来  - 目测是只监听了src文件
-2.build打包后的文件不能为正确引用 - 严重 - 考虑依赖文件没有打包全 -->
-
-#### 告警流水窗组件介绍
+#### 告警流水窗组件(OssAlarmWindow )介绍
 
     告警流水窗是OSS核心功能，现满足每秒推送量1000条、日推送百万的大数据推送量。
     使用时需要与后台JDK包搭配使用，在此基础上最大程度支持自定义、扩展。

@@ -43,11 +43,13 @@ module.exports = {
       },
       {
         test: /.(ttf|eot|woff|woff2)$/,
+        exclude: /node_modules/,
         loader: 'file-loader',
       },
       {
         test: /\.svg(\?\S*)?$/,
         loader: 'url-loader',
+        exclude: /node_modules/,
         options: {
           limit: 10000,
           name: path.posix.join('static', '[name].[hash:7].[ext]')
@@ -56,6 +58,7 @@ module.exports = {
       {
         test: /\.(gif|png|jpe?g)(\?\S*)?$/,
         loader: 'url-loader',
+        exclude: /node_modules/,
         options: {
           limit: 10000,
           name: path.posix.join('static', '[name].[hash:7].[ext]')
