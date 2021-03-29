@@ -1,6 +1,6 @@
 {
   "name": "oss-alarm",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A Component about oss-alarm",
   "main": "./lib/oss-alarm.common.js",
   "scripts": {
