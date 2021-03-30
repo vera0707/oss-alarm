@@ -33,10 +33,11 @@ export default {
         name: 'value'
       },
       data: [
-        { key: "1", value: "一级告警", class: "level2" },
-        { key: "2", value: "二级告警", class: "level3" },
-        { key: "3", value: "三级告警", class: "level4" },
-        { key: "4", value: "四级告警", class: "level5" },
+        { key: 'sum', value: '总告警', class: 'total'},
+        { key: "1", value: "一级告警", class: "level1" },
+        { key: "2", value: "二级告警", class: "level2" },
+        { key: "3", value: "三级告警", class: "level3" },
+        { key: "4", value: "四级告警", class: "level4" },
       ],
     },
     /* 暂停/启动功能 */
@@ -71,11 +72,15 @@ export default {
     headerList: [],
     headerListrProp: {
       field: 'field',
-      name: 'headerName'
+      name: 'headerName',
     },
+    /* 表格渲染 */
+    cellRenderer: {},
     rowHeight: 32,
     resizable: true,
     sortable: true,
-    filter: true
-  }
+    filter: true,
+    rowOperatinBar: true,
+    preventContextmenu: false,
+  },
 }

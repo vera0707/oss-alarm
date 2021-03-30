@@ -13,7 +13,13 @@
         placement="bottom"
       >
         <div class="features-alarm-grid">
-          <i class="features-alarm-icon" :class="item.class"></i>
+          <div v-if="item.class && item.class === 'total'" class="features-alarm-icon alarm-total">
+            <div class="color-red"></div>
+            <div class="color-orange"></div>
+            <div class="color-yellow"></div>
+            <div class="color-blue"></div>
+          </div>
+          <i v-else class="features-alarm-icon" :class="item.class"></i>
           <span>{{ levelData[item[levelConfig.props.field]] }}</span>
         </div>
       </el-tooltip>
@@ -84,29 +90,39 @@ export default {
       height: 12px;
       border-radius: 4px;
       margin-right: 5px;
-      .color-block-red,
-      .color-block-orange,
-      .color-block-yellow,
-      .color-block-blue {
-        width: 7px;
-        height: 7px;
+
+      &.alarm-total{
+        display: inline-block;
+        width: 14px;
+        height: 14px;
+        border-radius: 4px;
+        margin-right: 3px;
+        display: flex;
+        flex-wrap: wrap;
       }
-      .color-block-red {
+      .color-red,
+      .color-orange,
+      .color-yellow,
+      .color-blue {
+        width: 5px;
+        height: 5px;
+      }
+      .color-red {
         border-radius: 4px 0px 0px 0px;
         background: rgba(240, 65, 52, 0.3);
         border: 1px solid rgba(240, 65, 52, 0.7);
       }
-      .color-block-orange {
+      .color-orange {
         background: rgba(255, 147, 29, 0.3);
         border-radius: 0px 4px 0px 0px;
         border: 1px solid rgba(255, 147, 29, 0.7);
       }
-      .color-block-yellow {
+      .color-yellow {
         background: rgba(255, 215, 133, 0.3);
         border-radius: 0px 0px 0px 4px;
         border: 1px solid rgba(255, 215, 133, 0.7);
       }
-      .color-block-blue {
+      .color-blue {
         background: rgba(78, 216, 255, 0.3);
         border-radius: 0px 0px 4px 0px;
         border: 1px solid rgba(78, 216, 255, 0.7);

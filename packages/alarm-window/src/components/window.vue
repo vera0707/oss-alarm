@@ -10,7 +10,8 @@
     :animateRows="true"
     :rowHeight="windowConfig.rowHeight"
     :suppressRowClickSelection="true"
-    :rowBuffer="Math.ceil(windowHeight/windowConfig.rowHeight)"
+    :rowBuffer="Math.ceil(windowHeight / windowConfig.rowHeight)"
+    :frameworkComponents="frameworkComponents"
     rowSelection="multiple"
     @grid-ready="onGridReady"
     @cellClicked="cellClicked"
@@ -19,6 +20,7 @@
 </template>
 <script>
 import { AgGridVue } from "ag-grid-vue";
+import action from './windowAction';
 
 const localeText = {
   equals: "相等",
@@ -35,7 +37,7 @@ const localeText = {
   noRowsToShow: "暂无数据",
 };
 
-const pinnedTopRowData = [] // 锁定数据🔒
+const pinnedTopRowData = []; // 锁定数据🔒
 
 export default {
   props: {
@@ -77,9 +79,21 @@ export default {
   },
   computed: {
     columnDefs() {
-      const columnDefs = this.windowConfig.headerList || [];
+      const {
+        headerList = [],
+        cellRenderer = {},
+        headerListrProp,
+        rowOperatinBar = true,
+      } = this.windowConfig;
+      headerList.forEach((element) => {
+        element.field = element[headerListrProp.field];
+        element.headerName = element[headerListrProp.name];
+        if (cellRenderer[element.field]) {
+          element.cellRenderer = cellRenderer[element.field];
+        }
+      });
       if (this.canLock) {
-        columnDefs.unshift(
+        headerList.unshift(
           {
             headerName: "",
             field: "colId",
@@ -103,55 +117,75 @@ export default {
           }
         );
       }
-      return columnDefs;
+      if(rowOperatinBar) {
+        headerList.push({
+          field: 'action',
+          headerName: '操作',
+          width: 100,
+          pinned: 'right',
+          cellRenderer: 'action',
+          cellRendererParams: {
+          dropdownChange: this.dropdownChange,
+          dealAction: this.dealAction
+          }
+        })
+      }
+      return headerList;
     },
   },
-  mounted(){
-    this.windowHeight = this.$refs.ossAgWindow.$el.offsetHeight
+  mounted() {
+    this.windowHeight = this.$refs.ossAgWindow.$el.offsetHeight;
     window.onresize = () => {
-      this.windowHeight = this.$refs.ossAgWindow.$el.offsetHeight
-    }
+      this.windowHeight = this.$refs.ossAgWindow.$el.offsetHeight;
+    };
   },
   data() {
     return {
-      alarmTableList: [],  // 列表数据
-      alarmClearData: [],  // 清除数据
-      localeText,          // 汉化
-      windowHeight: 300,   // 窗口大小
+      alarmTableList: [], // 列表数据
+      alarmClearData: [], // 清除数据
+      localeText, // 汉化
+      windowHeight: 300, // 窗口大小
+      frameworkComponents: { action }
     };
   },
   methods: {
-    onGridReady (params) {
-      this.gridApi = params.api
-      this.columnApi = params.columnApi
+    onGridReady(params) {
+      this.gridApi = params.api;
+      this.columnApi = params.columnApi;
     },
     cellClicked(target) {
-      const {field} = target.column.colDef;
-      if(field === 'isFreeze') {
-        if(target.rowPinned === 'top') {
-          pinnedTopRowData.splice(target.rowIndex,1);
+      const { field } = target.column.colDef;
+      if (field === "isFreeze") {
+        if (target.rowPinned === "top") {
+          pinnedTopRowData.splice(target.rowIndex, 1);
           this.gridApi.setPinnedTopRowData(pinnedTopRowData);
         }
-      }else if(field !== 'colId'){
-        this.$emit('systemOperation', {
-          type: 'detail',
-          data: target.data
-        })
+      } else if (field !== "colId" && field !== "action") {
+        this.$emit("systemOperation", {
+          type: "detail",
+          data: target.data,
+        });
       }
-    },  
+    },
     filterTableList(tableList) {
       return tableList.filter((v) => !this.alarmClearData.includes(v.rowkey));
     },
     lockMultipleRows() {
-      const lockRows = this.gridApi.getSelectedRows()
+      const lockRows = this.gridApi.getSelectedRows();
       pinnedTopRowData.push(...lockRows);
-      this.gridApi.updateRowData({ remove: lockRows })
+      this.gridApi.updateRowData({ remove: lockRows });
       this.gridApi.setPinnedTopRowData(pinnedTopRowData);
     },
     onSelectionChanged(event) {
       const dataLength = event.api.getSelectedNodes().length;
-      this.$emit('changeSystemUpdata',dataLength !== 0, true)
+      this.$emit("changeSystemUpdata", dataLength !== 0, true);
     },
+    dropdownChange(val) {
+      this.$emit("changeSystemUpdata", val, true);
+    },
+    dealAction() {
+      this.$message.success('操作成功');
+    }
   },
 };
 </script>
@@ -178,6 +212,7 @@ export default {
   .ag-cell {
     line-height: 32px;
     border: none;
+    -webkit-font-smoothing: revert;
     &:focus,
     &:active {
       border: none;
@@ -245,6 +280,44 @@ export default {
   .ag-floating-top .lock-icon {
     background-image: url("images/alarm-window/lock_blue.svg");
     margin-right: 5px;
+  }
+  .alarm-tag {
+    display: inline-block;
+    color: #455a74;
+    height: 20px;
+    line-height: 20px;
+    font-size: 12px;
+    border-radius: 4px;
+    padding: 0 6px;
+    text-align: center;
+    word-break: keep-all;
+    cursor: pointer;
+    transform: scale(0.9);
+
+    &.level-1 {
+      background: rgba(255, 155, 155, 0.3);
+      border: 1px solid rgba(255, 89, 45, 0.71);
+    }
+
+    &.level-2 {
+      background: rgba(255, 190, 95, 0.3);
+      border: 1px solid rgba(245, 166, 35, 0.7);
+    }
+
+    &.level-3 {
+      background: rgba(255, 248, 107, 0.3);
+      border: 1px solid #f9de25;
+    }
+
+    &.level-4 {
+      background: rgba(50, 178, 255, 0.3);
+      border: 1px solid rgba(50, 178, 255, 0.8);
+    }
+
+    &.level-5 {
+      background: rgba(19, 208, 119, 0.3);
+      border: 1px solid rgba(50, 178, 255, 0.8);
+    }
   }
 }
 </style>

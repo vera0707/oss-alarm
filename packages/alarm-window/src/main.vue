@@ -43,6 +43,7 @@ import Window from "./components/window";
 import Controller from './components/controller';
 
 let timer = null;
+let isDestroyedPage = false;
 
 export default {
   name: "OssAlarmWindow",
@@ -158,6 +159,7 @@ export default {
     },
     changeAlarmTab(key) {
       this.activeTab = key;
+      this.updataAlarmSearch()
     },
     systemOperation(systemData = {}){
       this.systemControCenter = systemData;
@@ -168,6 +170,7 @@ export default {
     },
     /* 系统暂停流水窗 */
     systemOperationUpdate(isStopSystem, isAutoRestore) {
+      this.clearSystemTimer();
       if (
         !isStopSystem &&
         isAutoRestore &&
@@ -226,7 +229,6 @@ export default {
       }
     },
     setSyetemUpdataTimer() {
-      this.clearSystemTimer();
       timer = setTimeout(() => {
         if (this.isStopUpdate) {
           this.systemStopUpdate = false;
@@ -240,6 +242,17 @@ export default {
       if (timer) clearTimeout(timer);
       timer = null;
     },
+  },
+  created() {
+    isDestroyedPage = false;
+    document.oncontextmenu = (event) => {
+      if(this.con_window.preventContextmenu && !isDestroyedPage) {
+        event.preventDefault();
+      }
+    };
+  },
+  destroyed() {
+    isDestroyedPage = true;
   },
 };
 </script>

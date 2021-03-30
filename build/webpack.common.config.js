@@ -43,7 +43,6 @@ module.exports = {
       },
       {
         test: /.(ttf|eot|woff|woff2)$/,
-        exclude: /node_modules/,
         loader: 'file-loader',
       },
       {
