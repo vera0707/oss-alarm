@@ -8,14 +8,14 @@
   </div>
 </template>
 <script>
-import AlarmDetail from "./action/detail";
+import AlarmDetail from './action/detail';
 
 export default {
   components: {
     AlarmDetail,
   },
   props: {
-    controCenter: Object
+    controCenter: Object,
   },
   computed: {
     type() {
@@ -25,10 +25,10 @@ export default {
       return (this.controCenter || {}).data || {};
     },
   },
-  methods:{
+  methods: {
     closeControCenter() {
-      this.$emit('closeControCenter')
-    }
-  }
+      this.$emit('closeControCenter');
+    },
+  },
 };
 </script>

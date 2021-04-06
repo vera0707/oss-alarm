@@ -1,24 +1,33 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import VueRouter from 'vue-router';
+import Vue from 'vue';
+import Welcome from '../views/welcome.vue';
+import AlarmWindow from '../views/alarm-window';
 
-Vue.use(Router)
+console.log('什么鬼', AlarmWindow);
 
-const requireRouter = require.context('../views', true, /\index.vue/)
-let routes = [
+Vue.use(VueRouter);
+
+const routes = [
   {
     path: '/',
-    redirect: '/alarm-window',
+    redirect: '/index',
   },
-]
+  {
+    path: '/index',
+    name: 'index',
+    component: Welcome,
+  },
+  {
+    path: '/alarmWindow',
+    name: 'alarmWindow',
+    component: AlarmWindow,
+  },
+];
 
-requireRouter.keys().forEach(fileName => {
-  const name = fileName.split('/')[1]
-  const route = {
-    path: `/${name}`,
-    component: (resolve) => require([`../views/${name}/index.vue`], resolve)
-  }
-  routes.push(route)
-})
+const router = new VueRouter({
+  mode: 'history',
+  base: process.env.BASE_URL,
+  routes,
+});
 
-
-export default new Router({ routes })
+export default router;

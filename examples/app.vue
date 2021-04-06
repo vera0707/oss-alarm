@@ -1,15 +1,82 @@
 <template>
   <div id="app">
-    <oss-view />
+    <header class="page-header">
+      <div class="left">
+        <img src="../images/logo.png" class="logo" alt="logo" />
+        <span class="title">oss-alarm</span>
+      </div>
+    </header>
+    <div class="page-container">
+      <div class="aside visible">
+        <el-input placeholder="请输入内容" class="search"></el-input>
+        <ul class="nav-menu">
+          <li
+            v-for="item in apiList"
+            :key="item.id"
+            :class="{title: item.type == 'title',active: item.id == pageKey}"
+            class="nav-item"
+            @click="changeNav(item)"
+          >
+            <span>{{ item.label }}</span>
+          </li>
+        </ul>
+      </div>
+      <div class="content">
+        <router-view />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
-}
+  name: 'App',
+  data() {
+    return {
+      pageKey: 1,
+      apiList: [
+        {
+          id: 0,
+          label: '开发指南',
+          type: 'title',
+        },
+        {
+          id: 1,
+          label: '全局安装',
+        },
+        {
+          id: 2,
+          label: '按需加载',
+        },
+        {
+          id: 3,
+          label: '全局参数',
+        },
+        {
+          id: 4,
+          label: '全局主题',
+        },
+        {
+          id: 5,
+          label: '组件',
+          type: 'title',
+        },
+        {
+          id: 6,
+          label: '告警监控',
+          path: 'alarmWindow',
+        },
+      ],
+    };
+  },
+  methods: {
+    changeNav({ id, type, path }) {
+      if (type === 'title') return;
+      this.pageKey = id;
+      if (path) {
+        this.$router.push({ name: path });
+      }
+    },
+  },
+};
 </script>
-
-<style lang="scss">
-@import '../src/styles/index.scss';
-</style>

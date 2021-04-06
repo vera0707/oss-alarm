@@ -49,20 +49,20 @@
 <script>
 export default {
   props: {
-    /* 告警等级配置 */ 
+    /* 告警等级配置 */
     levelConfig: Object,
-    /* 告警等级数值 */ 
+    /* 告警等级数值 */
     levelData: Object,
-     /* 告警启停状态 */ 
+    /* 告警启停状态 */
     isStopUpdate: Boolean,
     /* 是否支持数据锁定🔐 */
     canLock: Boolean,
   },
   methods: {
-    userOperation(type, status){
-      this.$emit('onUserOperation', { type, status })
-    }
-  }
+    userOperation(type, status) {
+      this.$emit('onUserOperation', { type, status });
+    },
+  },
 };
 </script>
 <style lang="scss" scoped>
@@ -159,15 +159,15 @@ export default {
       height: 20px;
       margin-right: 8px;
       &.features-play-icon {
-        background: url("images/alarm-window/play.svg") no-repeat;
+        background: url("/images/alarm-window/play.svg") no-repeat;
         background-size: 14px;
       }
       &.features-pause-icon {
-        background: url("images/alarm-window/pause.svg") no-repeat;
+        background: url("/images/alarm-window/pause.svg") no-repeat;
         background-size: 14px;
       }
       &.features-lock-icon {
-        background: url("images/alarm-window/lock.svg") no-repeat;
+        background: url("/images/alarm-window/lock.svg") no-repeat;
         background-size: 14px;
       }
     }

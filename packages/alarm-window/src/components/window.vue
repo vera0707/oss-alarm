@@ -19,22 +19,22 @@
   ></ag-grid-vue>
 </template>
 <script>
-import { AgGridVue } from "ag-grid-vue";
+import { AgGridVue } from 'ag-grid-vue';
 import action from './windowAction';
 
 const localeText = {
-  equals: "相等",
-  notEqual: "不相等",
-  lessThan: "小于",
-  greaterThan: "大于",
-  lessThanOrEqual: "小于等于",
-  greaterThanOrEqual: "大于等于",
-  inRange: "范围",
-  contains: "包含",
-  notContains: "不包含",
-  startsWith: "开始于",
-  endsWith: "结束于",
-  noRowsToShow: "暂无数据",
+  equals: '相等',
+  notEqual: '不相等',
+  lessThan: '小于',
+  greaterThan: '大于',
+  lessThanOrEqual: '小于等于',
+  greaterThanOrEqual: '大于等于',
+  inRange: '范围',
+  contains: '包含',
+  notContains: '不包含',
+  startsWith: '开始于',
+  endsWith: '结束于',
+  noRowsToShow: '暂无数据',
 };
 
 const pinnedTopRowData = []; // 锁定数据🔒
@@ -60,8 +60,8 @@ export default {
       handler(newV) {
         const { dataType, data, clearData } = newV;
         if (dataType && data) {
-          if (dataType === "listInfo") this.alarmTableList = data;
-          else if (dataType === "kafkaAlarm" && data.length) {
+          if (dataType === 'listInfo') this.alarmTableList = data;
+          else if (dataType === 'kafkaAlarm' && data.length) {
             const { alarmTableList } = this;
             alarmTableList.unshift(...data);
             if (alarmTableList.length > 1000) alarmTableList.length = 1000;
@@ -95,29 +95,29 @@ export default {
       if (this.canLock) {
         headerList.unshift(
           {
-            headerName: "",
-            field: "colId",
+            headerName: '',
+            field: 'colId',
             checkboxSelection: true,
             headerCheckboxSelection: true,
-            pinned: "left",
+            pinned: 'left',
             filter: false,
             sortable: false,
             width: 35,
             lockPosition: true,
           },
           {
-            headerName: "状态标识",
-            field: "isFreeze",
+            headerName: '状态标识',
+            field: 'isFreeze',
             filter: false,
             sortable: false,
-            pinned: "left",
+            pinned: 'left',
             width: 60,
             lockPosition: true,
             cellRenderer: () => '<div class="lock-icon"></div>',
-          }
+          },
         );
       }
-      if(rowOperatinBar) {
+      if (rowOperatinBar) {
         headerList.push({
           field: 'action',
           headerName: '操作',
@@ -125,10 +125,10 @@ export default {
           pinned: 'right',
           cellRenderer: 'action',
           cellRendererParams: {
-          dropdownChange: this.dropdownChange,
-          dealAction: this.dealAction
-          }
-        })
+            dropdownChange: this.dropdownChange,
+            dealAction: this.dealAction,
+          },
+        });
       }
       return headerList;
     },
@@ -145,7 +145,7 @@ export default {
       alarmClearData: [], // 清除数据
       localeText, // 汉化
       windowHeight: 300, // 窗口大小
-      frameworkComponents: { action }
+      frameworkComponents: { action },
     };
   },
   methods: {
@@ -155,14 +155,14 @@ export default {
     },
     cellClicked(target) {
       const { field } = target.column.colDef;
-      if (field === "isFreeze") {
-        if (target.rowPinned === "top") {
+      if (field === 'isFreeze') {
+        if (target.rowPinned === 'top') {
           pinnedTopRowData.splice(target.rowIndex, 1);
           this.gridApi.setPinnedTopRowData(pinnedTopRowData);
         }
-      } else if (field !== "colId" && field !== "action") {
-        this.$emit("systemOperation", {
-          type: "detail",
+      } else if (field !== 'colId' && field !== 'action') {
+        this.$emit('systemOperation', {
+          type: 'detail',
           data: target.data,
         });
       }
@@ -178,14 +178,14 @@ export default {
     },
     onSelectionChanged(event) {
       const dataLength = event.api.getSelectedNodes().length;
-      this.$emit("changeSystemUpdata", dataLength !== 0, true);
+      this.$emit('changeSystemUpdata', dataLength !== 0, true);
     },
     dropdownChange(val) {
-      this.$emit("changeSystemUpdata", val, true);
+      this.$emit('changeSystemUpdata', val, true);
     },
     dealAction() {
       this.$message.success('操作成功');
-    }
+    },
   },
 };
 </script>
@@ -248,7 +248,7 @@ export default {
   .lock-icon {
     width: 10px;
     height: 10px;
-    background-image: url("images/alarm-window/unlock.svg");
+    background-image: url("/images/alarm-window/unlock.svg");
     background-size: 10px;
     margin-top: 10px;
     margin-right: 5px;
@@ -278,7 +278,7 @@ export default {
   //   margin-right: 5px;
   // }
   .ag-floating-top .lock-icon {
-    background-image: url("images/alarm-window/lock_blue.svg");
+    background-image: url("/images/alarm-window/lock_blue.svg");
     margin-right: 5px;
   }
   .alarm-tag {

@@ -1,6 +1,6 @@
-import OssAlarmWindow from './src/main'
+import OssAlarmWindow from './src/main.vue';
 
-OssAlarmWindow.install = function (Vue) {
-  Vue.component(OssAlarmWindow.name, OssAlarmWindow)
-}
-export default OssAlarmWindow
+OssAlarmWindow.install = (Vue) => {
+  Vue.component(OssAlarmWindow.name, OssAlarmWindow);
+};
+export default OssAlarmWindow;

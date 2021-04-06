@@ -1,15 +1,54 @@
 {
   "name": "oss-alarm",
   "version": "1.0.1",
+  "private": true,
   "description": "A Component about oss-alarm",
-  "main": "./lib/oss-alarm.common.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack serve --inline --config ./build/webpack.dev.config.js",
-    "prod": "webpack --config ./build/webpack.prod.config.js && npm run build:component",
-    "build": "webpack --config ./build/webpack.prod.config.js",
-    "build:component": "webpack --config ./build/webpack.component.config.js",
-    "eslint": "eslint --fix --ext .js,.vue src",
-    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s"
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lib:pack": "vue-cli-service build --target lib --name index --dest lib_temp index.js",
+    "lib:modules": "gulp build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "ag-grid-vue": "^25.1.0",
+    "axios": "^0.21.1",
+    "core-js": "^3.6.5",
+    "register-service-worker": "^1.7.1",
+    "stompjs": "^2.3.3",
+    "vue": "^2.6.11",
+    "vue-class-component": "^7.2.6",
+    "vue-property-decorator": "^9.1.2",
+    "vue-router": "^3.2.0"
+  },
+  "main": "./lib/oss-alarm.common.js",
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-eslint": "~4.5.0",
+    "@vue/cli-plugin-pwa": "~4.5.0",
+    "@vue/cli-plugin-router": "~4.5.0",
+    "@vue/cli-plugin-unit-mocha": "~4.5.0",
+    "@vue/cli-service": "~4.5.0",
+    "@vue/eslint-config-airbnb": "^5.0.2",
+    "@vue/test-utils": "^1.0.3",
+    "ag-grid-community": "^25.1.0",
+    "babel-eslint": "^10.1.0",
+    "chai": "^4.1.2",
+    "element-ui": "^2.15.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.11"
+  },
+  "postcss": {
+    "plugins": {
+      "autoprefixer": {}
+    }
   },
   "author": "xieyuxuan",
   "repository": {
@@ -26,78 +65,5 @@
   "bugs": {
     "url": "https://github.com/vera0707/oss-alarm-window/issues"
   },
-  "homepage": "https://github.com/vera0707/oss-alarm-window#readme",
-  "dependencies": {
-    "ag-grid-community": "^23.0.2",
-    "ag-grid-vue": "^23.0.2",
-    "babel-eslint": "^10.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "core-js": "^3.9.1",
-    "element-ui": "^2.15.1",
-    "eslint": "^7.22.0",
-    "eslint-plugin-vue": "^7.7.0",
-    "lodash": "^4.17.21",
-    "node-notifier": "^9.0.0",
-    "sockjs-client": "^1.5.0",
-    "stompjs": "^2.3.3",
-    "uglifyjs-webpack-plugin": "^2.2.0",
-    "vue": "^2.6.12"
-  },
-  "devDependencies": {
-    "@babel/core": "^7.13.8",
-    "@babel/plugin-transform-runtime": "^7.13.10",
-    "@babel/polyfill": "^7.12.1",
-    "@babel/preset-env": "^7.13.9",
-    "@commitlint/cli": "^12.0.1",
-    "@commitlint/config-conventional": "^12.0.1",
-    "axios": "^0.21.1",
-    "babel-loader": "^8.2.2",
-    "cross-env": "^7.0.3",
-    "css-loader": "^5.1.1",
-    "cz-conventional-changelog": "^3.3.0",
-    "eslint-config-airbnb-base": "^14.2.1",
-    "eslint-plugin-import": "^2.22.1",
-    "file-loader": "^6.2.0",
-    "friendly-errors-webpack-plugin": "^1.7.0",
-    "html-webpack-plugin": "^5.2.0",
-    "mini-css-extract-plugin": "^1.3.9",
-    "postcss": "^8.2.7",
-    "postcss-loader": "^5.0.0",
-    "sass": "^1.32.8",
-    "sass-loader": "^11.0.1",
-    "url-loader": "^4.1.1",
-    "vue-class-component": "^7.2.6",
-    "vue-loader": "^15.9.6",
-    "vue-property-decorator": "^9.1.2",
-    "vue-router": "^3.5.1",
-    "vue-template-compiler": "^2.6.12",
-    "webpack": "^5.24.4",
-    "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2",
-    "webpack-merge": "^5.7.3"
-  },
-  "directories": {
-    "doc": "docs",
-    "example": "examples",
-    "lib": "lib"
-  },
-  "husky": {
-    "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
-  "commitlint": {
-    "extends": [
-      "@commitlint/config-conventional"
-    ]
-  },
-  "engines": {
-    "node": ">= 14.0.0",
-    "npm": ">= 6.0.0"
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "homepage": "https://github.com/vera0707/oss-alarm-window#readme"
 }
