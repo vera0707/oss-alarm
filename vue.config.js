@@ -1,8 +1,14 @@
 process.env.VUE_APP_OSS_ALARM = 'development';
+const path = require('path')
+
+function resolve (dir) {
+  return path.join(__dirname, '.', dir)
+}
+
 
 module.exports = {
   lintOnSave: false,
-  publicPath: process.env.NODE_ENV === 'production' ? '/oss/v1/' : '/',
+  publicPath:  '/',
   outputDir: 'docs',
   assetsDir: 'static',
   productionSourceMap: false,
@@ -20,7 +26,9 @@ module.exports = {
     },
     resolve: {
       extensions: ['.vue', '.js', '.json'],
-      alias: {},
+      alias: {
+        'images': resolve('images'),
+      },
     },
     output: {
       library: 'OssAlarm',

@@ -248,7 +248,7 @@ export default {
   .lock-icon {
     width: 10px;
     height: 10px;
-    background-image: url("/images/alarm-window/unlock.svg");
+    background-image: url("~images/alarm-window/unlock.svg");
     background-size: 10px;
     margin-top: 10px;
     margin-right: 5px;
@@ -278,7 +278,7 @@ export default {
   //   margin-right: 5px;
   // }
   .ag-floating-top .lock-icon {
-    background-image: url("/images/alarm-window/lock_blue.svg");
+    background-image: url("~images/alarm-window/lock_blue.svg");
     margin-right: 5px;
   }
   .alarm-tag {

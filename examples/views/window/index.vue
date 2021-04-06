@@ -80,7 +80,7 @@ export default {
   display: block;
   width: 100vw;
   height: 100vh;
-  // background-image: url("/images/alarm-window/example_bg.jpeg");
+  background-image: url("~images/alarm-window/example_bg.jpeg");
   backface-visibility: hidden;
   position: relative;
   overflow: hidden;
@@ -101,7 +101,7 @@ export default {
     position: absolute;
     left: 30px;
     top: 30px;
-    background: url("/images/logo.png");
+    background: url("~images/logo.png");
     background-size: 40px;
   }
   .oss-window {

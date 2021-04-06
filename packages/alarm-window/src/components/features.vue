@@ -159,15 +159,15 @@ export default {
       height: 20px;
       margin-right: 8px;
       &.features-play-icon {
-        background: url("/images/alarm-window/play.svg") no-repeat;
+        background: url("~images/alarm-window/play.svg") no-repeat;
         background-size: 14px;
       }
       &.features-pause-icon {
-        background: url("/images/alarm-window/pause.svg") no-repeat;
+        background: url("~images/alarm-window/pause.svg") no-repeat;
         background-size: 14px;
       }
       &.features-lock-icon {
-        background: url("/images/alarm-window/lock.svg") no-repeat;
+        background: url("~images/alarm-window/lock.svg") no-repeat;
         background-size: 14px;
       }
     }

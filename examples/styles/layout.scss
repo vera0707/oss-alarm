@@ -90,12 +90,12 @@ p {
 
   .search{
     width: 260px;
-    margin: 10px auto;
+    margin: 25px auto;
   } 
 
   .nav-menu{
     width: 300px;
-    padding: 0 0 15px 40px;
+    padding: 0 0 20px 40px;
 
     .nav-item{
       display: block;
@@ -120,6 +120,23 @@ p {
       &.active {
         color: #409eff;
       }
+    }
+  }
+  .content{
+    width: 100%;
+    margin: 5px 20px 30px;
+
+    h2{
+      margin: 30px 0 .8em;
+      padding-bottom: .7em;
+      border-bottom: 1px solid #ddd;
+    }
+    p.tip{
+      padding: 12px 24px 12px 30px;
+      margin: 10px 0;
+      background-color: #f8f8f8;
+      border-left: 4px solid #409eff;
+      font-size: 14px;
     }
   }
 }

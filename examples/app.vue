@@ -33,28 +33,32 @@ export default {
   name: 'App',
   data() {
     return {
-      pageKey: 1,
+      pageKey: 0,
       apiList: [
         {
           id: 0,
+          label: 'Begin',
+          path: 'index'
+        },
+        {
+          id: 1,
           label: '开发指南',
           type: 'title',
         },
         {
-          id: 1,
-          label: '全局安装',
-        },
-        {
           id: 2,
-          label: '按需加载',
+          label: '全局安装',
+          path: 'startInstall'
         },
         {
           id: 3,
-          label: '全局参数',
+          label: '按需加载',
+          path: 'startUse'
         },
         {
           id: 4,
           label: '全局主题',
+          path: 'startTheme'
         },
         {
           id: 5,
