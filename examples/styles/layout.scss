@@ -48,15 +48,11 @@ p {
     visibility: hidden;
   }
   .left {
+    width: 1440px;
     font-size: 22px;
     padding: 5px 0;
     flex-shrink: 0;
-  }
-  .right {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    text-align: right;
+    margin: 0 auto;
   }
   .logo {
     width: 18px;
@@ -71,11 +67,10 @@ p {
   }
 }
 .page-container {
-  height: calc(100vh - 48px);
+  width: 1440px;
   display: flex;
   flex-grow: 1;
-  border-bottom: 1px solid #dcdfe6;
-  overflow: hidden;
+  margin: 0 auto;
 
   .aside {
     width: 300px;

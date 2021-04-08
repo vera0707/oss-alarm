@@ -13,7 +13,7 @@
           <li
             v-for="item in apiList"
             :key="item.id"
-            :class="{title: item.type == 'title',active: item.id == pageKey}"
+            :class="{ title: item.type == 'title', active: item.id == pageKey }"
             class="nav-item"
             @click="changeNav(item)"
           >
@@ -27,55 +27,62 @@
     </div>
   </div>
 </template>
-
 <script>
+const apiList = [
+  {
+    id: 0,
+    label: "Begin",
+    path: "index",
+  },
+  {
+    id: 1,
+    label: "开发指南",
+    type: "title",
+  },
+  {
+    id: 2,
+    label: "全局安装",
+    path: "startInstall",
+  },
+  {
+    id: 3,
+    label: "按需加载",
+    path: "startUse",
+  },
+  {
+    id: 4,
+    label: "全局主题",
+    path: "startTheme",
+  },
+  {
+    id: 5,
+    label: "组件",
+    type: "title",
+  },
+  {
+    id: 6,
+    label: "告警监控",
+    path: "alarmWindow",
+  },
+];
 export default {
-  name: 'App',
+  name: "App",
   data() {
     return {
       pageKey: 0,
-      apiList: [
-        {
-          id: 0,
-          label: 'Begin',
-          path: 'index'
-        },
-        {
-          id: 1,
-          label: '开发指南',
-          type: 'title',
-        },
-        {
-          id: 2,
-          label: '全局安装',
-          path: 'startInstall'
-        },
-        {
-          id: 3,
-          label: '按需加载',
-          path: 'startUse'
-        },
-        {
-          id: 4,
-          label: '全局主题',
-          path: 'startTheme'
-        },
-        {
-          id: 5,
-          label: '组件',
-          type: 'title',
-        },
-        {
-          id: 6,
-          label: '告警监控',
-          path: 'alarmWindow',
-        },
-      ],
+      apiList,
     };
+  },
+  created() {
+    const pathName = this.$router.currentRoute.name;
+    const currentApi = apiList.filter(v=>v.path === pathName);
+    if(currentApi && currentApi.length) {
+      this.pageKey = currentApi[0].id;
+    }
   },
   methods: {
     changeNav({ id, type, path }) {
-      if (type === 'title') return;
+      if (type === "title") return;
       this.pageKey = id;
       if (path) {
         this.$router.push({ name: path });
