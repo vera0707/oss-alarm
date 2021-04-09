@@ -5,13 +5,15 @@
     <div class="oss-window">
       <OssAlarmWindow :alarmConfig="alarmConfig" />
     </div>
+    <p class="demo-code">显示代码</p>
     <pre v-highlightjs>
-      <code class="html">{{htmlCode[0]}}</code>
-    </pre>
-
-    <pre v-highlightjs>
+      <code class="javascript">{{htmlCode[0]}}</code>
       <code class="javascript">{{htmlCode[1]}}</code>
     </pre>
+    <div>AlarmWindow Attributes</div>
+    <el-table>
+      
+    </el-table>
   </div>
 </template>
 <script>
@@ -60,18 +62,21 @@ export default {
     };
   },
   created() {
-    console.log('are you go');
     this.fetch();
+    console.log('走你,go');
   },
   methods: {
     fetch() {
+      console.log('fetch');
       axios
         .post('/rca-sla/nsi/topo/open/socket', {}, {})
         .then((response) => {
+          console.log('去请求',response.data);
           if (response.status === 200 && response.data.retCode === '200') {
             const { alarmShow, alarmShowTitle, socketId } = response.data.data;
             const alarmShowArr = alarmShow.split(',');
             const alarmShowTitleArr = alarmShowTitle.split(',');
+            console.log(this);
 
             this.alarmConfig = {
               socketId,
@@ -109,6 +114,7 @@ export default {
                 },
               },
             };
+            console.log('???',alarmConfig)
           }
         })
         .catch((error) => {

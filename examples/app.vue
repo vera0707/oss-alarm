@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @click="clickEvent">
     <header class="page-header">
       <div class="left">
         <img src="../images/logo.png" class="logo" alt="logo" />
@@ -88,6 +88,19 @@ export default {
         this.$router.push({ name: path });
       }
     },
+    clickEvent(evnt) {
+      const pElem = evnt.target
+      if (pElem && pElem.className === 'demo-code') {
+        const nextElem = pElem.nextSibling
+        if (nextElem && nextElem.tagName.toLowerCase() === 'pre') {
+          if (nextElem.className.indexOf('is-show') > -1) {
+            nextElem.className = ''
+          } else {
+            nextElem.className = 'is-show'
+          }
+        }
+      }
+    }
   },
 };
 </script>

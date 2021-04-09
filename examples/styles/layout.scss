@@ -74,6 +74,7 @@ p {
 
   .aside {
     width: 300px;
+    min-height: calc(100vh - 50px);
     position: relative;
     display: flex;
     flex-direction: column;
@@ -132,6 +133,26 @@ p {
       background-color: #f8f8f8;
       border-left: 4px solid #409eff;
       font-size: 14px;
+    }
+    .demo-code {
+      cursor: pointer;
+      font-size: 15px;
+      color: $themeColor;
+      font-weight: bold;
+      text-align: center;
+      user-select: none;
+      &:before {
+        content: ">> ";
+      }
+      &:hover {
+        text-decoration: underline;
+      }
+      &+pre {
+        display: none;
+        &.is-show {
+          display: block;
+        }
+      }
     }
   }
 }
